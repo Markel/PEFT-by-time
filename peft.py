@@ -1,19 +1,22 @@
-from dataset.baseDataset import foo
-from utils.arguments import Args, parseArgs, DebugLevel
-import logging
-from logging import Logger
+""" Entry point for the project. Do -h for help. """
 
-def setLoggerConfigAndReturn(level: DebugLevel) -> Logger:
+from logging import Logger
+import logging
+from dataset.base_dataset import test_debug_function
+from utils.arguments import parse_args, DebugLevel
+
+def set_logger_config_and_return(level: DebugLevel) -> Logger:
     """
     Sets the configuration for the logger and returns the root logger.
 
     Args:
-        level (DebugLevel): The log level to use. One of "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL".
+        level (DebugLevel): The log level to use.
+            One of "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL".
 
     Returns:
         Logger: The root logger.
     """
-    
+
     logging.basicConfig(
         level=level,
         format='%(asctime)s - %(levelname)-8s - %(name)s: %(message)s',
@@ -22,7 +25,7 @@ def setLoggerConfigAndReturn(level: DebugLevel) -> Logger:
     return logging.getLogger('root')
 
 if __name__ == "__main__":
-    ARGS = parseArgs()
-    logger = setLoggerConfigAndReturn(ARGS.debug)
+    ARGS = parse_args()
+    logger = set_logger_config_and_return(ARGS.debug)
     logger.debug("Arguments parsed and logger iniciated successfully. Welcome to the program.")
-    foo()
+    test_debug_function()
