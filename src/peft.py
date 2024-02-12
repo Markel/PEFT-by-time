@@ -2,7 +2,9 @@
 
 from logging import Logger
 import logging
-from utils.arguments import parse_args, DebugLevel
+from .utils.arguments import parse_args, DebugLevel, Args
+
+ARGS: Args = parse_args()
 
 def set_logger_config_and_return(level: DebugLevel) -> Logger:
     """
@@ -23,7 +25,7 @@ def set_logger_config_and_return(level: DebugLevel) -> Logger:
     )
     return logging.getLogger('root')
 
-if __name__ == "__main__":
-    ARGS = parse_args()
+def main():
+    """ Start executing the project """
     logger = set_logger_config_and_return(ARGS.debug)
     logger.debug("Arguments parsed and logger iniciated successfully. Welcome to the program.")
