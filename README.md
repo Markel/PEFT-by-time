@@ -4,7 +4,7 @@
 
 ## Instalation
 
-Tested Python version: 3.12
+Tested Python version: 3.9
 
 Tested CUDA version: 12.3
 
@@ -15,7 +15,7 @@ python -m venv peft-env
 
 Install the dependencies:
 ```bash
-pip install -r requirements.txt
+pip install -r requirements.txt --find-links https://download.pytorch.org/whl/torch_stable.html
 ```
 
 ## Usage
