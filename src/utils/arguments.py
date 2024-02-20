@@ -2,9 +2,7 @@
 
 import argparse
 from dataclasses import dataclass
-from typing import Literal, cast
-
-type DebugLevel = Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
+from typing import NewType, Literal, cast
 
 @dataclass
 class Args(argparse.Namespace):
@@ -14,7 +12,9 @@ class Args(argparse.Namespace):
     """
 
     # The level for the logging https://docs.python.org/3/library/logging.html#logging-levels
-    debug: DebugLevel
+    debug: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
+    # The model to use. "small", "base", "large", "xl", "xxl" should be defaulted to T5v1.1 versions.
+    model: str
 
 def parse_args() -> Args:
     """
@@ -30,6 +30,10 @@ def parse_args() -> Args:
     parser.add_argument("--debug", type=str, default="INFO", help="The log level to use.",
                         choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
     )
+    parser.add_argument("-m", "--model", type=str, default="base",
+                        help="The model to use. \"small\", \"base\", \"large\", \"xl\", \"xxl\" \
+                              default to the corresponding T5v1.1 versions. Other models should \
+                              be passed in huggingface repo format.")
 
     arguments = parser.parse_args()
     return cast(Args, arguments)

@@ -1,17 +1,22 @@
 """ Entry point for the project. Do -h for help. """
 
+from gc import disable
 from logging import Logger
 import logging
-from .utils.arguments import parse_args, DebugLevel, Args
+
+from pyparsing import disable_diag
+from typing import Literal
+from .utils.arguments import parse_args, Args
+from .models.orig_model import download_model
 
 ARGS: Args = parse_args()
 
-def set_logger_config_and_return(level: DebugLevel) -> Logger:
+def set_logger_config_and_return(level: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]) -> Logger:
     """
     Sets the configuration for the logger and returns the root logger.
 
     Args:
-        level (DebugLevel): The log level to use.
+        level (str): The log level to use.
             One of "DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL".
 
     Returns:
@@ -19,13 +24,16 @@ def set_logger_config_and_return(level: DebugLevel) -> Logger:
     """
 
     logging.basicConfig(
-        level=level,
         format='%(asctime)s - %(levelname)-8s - %(name)s: %(message)s',
-        datefmt='%Y-%m-%d %H:%M:%S'
+        datefmt='%Y-%m-%d %H:%M:%S',
     )
-    return logging.getLogger('root')
+    logger_temp = logging.getLogger('m')
+    logger_temp.setLevel(level)
+    return logger_temp
 
 def main():
     """ Start executing the project """
     logger = set_logger_config_and_return(ARGS.debug)
     logger.debug("Arguments parsed and logger iniciated successfully. Welcome to the program.")
+    logger.debug(f"Arguments: {ARGS}")
+    model  = download_model(ARGS.model)

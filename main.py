@@ -1,5 +1,5 @@
 """ Entry point for the PEFT package. """
-from src import peft
+from src import peft_analyze
 
 if __name__ == "__main__":
-    peft.main()
+    peft_analyze.main()
