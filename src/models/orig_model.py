@@ -36,7 +36,7 @@ def download_model(model: str) -> tuple[T5Model, T5TokenizerFast]:
     if not os.path.isdir(local_dir):
         logger.debug("Downloading the model from the internet.")
         model_dir = snapshot_download(model_repo, local_dir=local_dir,
-                                ignore_patterns=["*.msgpack", "*.h5", "rust_model.ot"])
+                                ignore_patterns=["*.msgpack", "*.h5", "rust_model.ot", "*.onnx"])
         logger.debug("Model downloaded successfully.")
     logger.debug("Model identified successfully. Proceeding to load the tokenizer and model.")
 
