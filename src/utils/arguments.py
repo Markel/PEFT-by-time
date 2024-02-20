@@ -2,7 +2,7 @@
 
 import argparse
 from dataclasses import dataclass
-from typing import NewType, Literal, cast
+from typing import Literal, cast
 
 @dataclass
 class Args(argparse.Namespace):
@@ -13,7 +13,7 @@ class Args(argparse.Namespace):
 
     # The level for the logging https://docs.python.org/3/library/logging.html#logging-levels
     debug: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
-    # The model to use. "small", "base", "large", "xl", "xxl" should be defaulted to T5v1.1 versions.
+    # The model to use. "small","base","large","xl","xxl" should be defaulted to T5v1.1 versions.
     model: str
 
 def parse_args() -> Args:
