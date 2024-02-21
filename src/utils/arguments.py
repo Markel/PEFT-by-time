@@ -17,6 +17,8 @@ class Args(argparse.Namespace):
     model: str
     # The method to use.
     method: Literal["LoRA"]
+    # If the output should be colored.
+    no_color: bool
 
     ##* LoRA parameters
     # The rank to set LoRA to.
@@ -41,15 +43,17 @@ def parse_args() -> Args:
     )
     subparsers = parser.add_subparsers(dest="method",
                                        help='Available methods. Use method\'s help to know the \
-                                             specific parameter')
+                                             specific parameter',
+                                       required=True)
 
     parser.add_argument("--debug", type=str, default="INFO", help="The log level to use.",
-                        choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
-    )
+                        choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"])
     parser.add_argument("-m", "--model", type=str, default="base",
                         help="The model to use. \"small\", \"base\", \"large\", \"xl\", \"xxl\" \
                               default to the corresponding T5v1.1 versions. Other models should \
                               be passed in huggingface repo format.")
+    parser.add_argument("-nc", "--no-color", action="store_true",
+                        help="Disable color in the output of the logger.")
 
     #* Lora method
     parser_lora = subparsers.add_parser('LoRA', help='Low-Rank Adaptation')
