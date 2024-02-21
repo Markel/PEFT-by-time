@@ -6,11 +6,12 @@ import logging
 import os
 from typing import cast
 from huggingface_hub import snapshot_download
+from torch import device
 from transformers import T5Model, T5TokenizerFast
 
 logger = logging.getLogger("m.models.orig_model")
 
-def download_model(model: str) -> tuple[T5Model, T5TokenizerFast]:
+def download_model(model: str, init_device: device) -> tuple[T5Model, T5TokenizerFast]:
     """
     Given the name of a model it download the corresponding model from Huggingface.
     If already downloaded it just loads the model.
@@ -18,6 +19,7 @@ def download_model(model: str) -> tuple[T5Model, T5TokenizerFast]:
 
     Args:
         model (str): The name of the model to download.
+        device (torch.device): Device save the model to.
 
     Returns:
         tuple[T5Model, T5TokenizerFast]: The model and the tokenizer.
@@ -48,7 +50,7 @@ def download_model(model: str) -> tuple[T5Model, T5TokenizerFast]:
     logger.debug("Model identified successfully. Proceeding to load the tokenizer and model.")
 
     tokenizer: T5TokenizerFast = T5TokenizerFast.from_pretrained(model_dir, local_files_only=True)
-    model_hug  = T5Model.from_pretrained(model_dir, local_files_only=True)
+    model_hug  = T5Model.from_pretrained(model_dir, local_files_only=True, device_map=init_device)
     model_hug  = cast(T5Model, model_hug)
     logger.debug("Model and tokenizer loaded successfully.")
 

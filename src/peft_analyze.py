@@ -1,5 +1,6 @@
 """ Entry point for the project. Do -h for help. """
 
+from .utils.torchfuncs import get_device
 from .utils.logger import set_logger_config_and_return
 from .models.peft_convert import convert_to_lora
 
@@ -7,13 +8,15 @@ from .models.orig_model import download_model
 from .utils.arguments import Args, parse_args
 
 ARGS: Args = parse_args()
+DEVICE = get_device()
 
 def main() -> None:
     """ Start executing the project """
     logger = set_logger_config_and_return(ARGS.debug, ARGS.no_color)
     logger.info("Arguments parsed and logger iniciated successfully. Welcome to the program.")
     logger.debug("Arguments: %s", ARGS)
-    model, tokenizer  = download_model(ARGS.model) # pylint: disable=unused-variable
+    logger.info("Device: %s", DEVICE)
+    model, tokenizer = download_model(ARGS.model, DEVICE) # pylint: disable=unused-variable
 
     #* Get PEFT-ize version of the model
     if ARGS.method == "LoRA":
