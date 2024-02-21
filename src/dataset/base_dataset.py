@@ -5,7 +5,7 @@ This module contains the abstract class for all datasets, so we can do type chec
 from abc import ABC, abstractmethod
 import logging
 
-logger = logging.getLogger("dataset.base_dataset")
+logger = logging.getLogger("m.dataset.base_dataset")
 
 class BaseDataset(ABC):
     """

@@ -1,0 +1,18 @@
+"""
+Use requirements.txt for installing the correct dependencies.
+This file is used as a reference of the commands used to install the dependencies.
+"""
+
+pip install torch --index-url https://download.pytorch.org/whl/cu121
+
+pip install numpy==1.26.4 \
+pandas==2.2.0 \
+tokenizers==0.15.2 \
+datasets==2.16.1 \
+transformers==4.37.2 \
+sentencepiece==0.1.99 \
+huggingface-hub==0.20.3 \
+peft==0.8.2 \
+matplotlib==3.8.2 \
+wandb==0.16.3 \
+pylint==3.0.3
