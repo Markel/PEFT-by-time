@@ -14,7 +14,14 @@ def download_model(model: str) -> tuple[T5Model, T5TokenizerFast]:
     """
     Given the name of a model it download the corresponding model from Huggingface.
     If already downloaded it just loads the model.
-    It downloads it to the downloads folder,
+    It downloads it to the downloads folder, and then loads it from there.
+
+    Args:
+        model (str): The name of the model to download.
+
+    Returns:
+        tuple[T5Model, T5TokenizerFast]: The model and the tokenizer.
+        It's set to T5, but Seq2Seq models should work as well (not guaranteed).
     """
     model_repo: str
     local_dir = "./downloads/models/"+model
@@ -34,7 +41,7 @@ def download_model(model: str) -> tuple[T5Model, T5TokenizerFast]:
 
     model_dir = local_dir
     if not os.path.isdir(local_dir):
-        logger.debug("Downloading the model from the internet.")
+        logger.info("Downloading the model from the internet.")
         model_dir = snapshot_download(model_repo, local_dir=local_dir,
                                 ignore_patterns=["*.msgpack", "*.h5", "rust_model.ot", "*.onnx"])
         logger.debug("Model downloaded successfully.")
