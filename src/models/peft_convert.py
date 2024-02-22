@@ -38,7 +38,7 @@ def convert_to_peft(model: T5Model, args: Args) -> PeftModel:
             logger.critical("Method LoRA requires rank, alpha, dropout and target modules. \
                             Parser should have failed.")
             raise ValueError("Method LoRA requires rank, alpha, dropout and target modules.")
-        
+
         peft_model = convert_to_lora(model,
                                      args.rank, args.alpha, args.dropout, args.target_modules)
     else:
