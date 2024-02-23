@@ -30,10 +30,11 @@ class TweetEvalHate(BaseDataset):
         local_dir = "./downloads/datasets/tweet_eval"
         dataset_dict = load_dataset(local_dir, "hate")
         dataset_dict = cast(DatasetDict, dataset_dict)
-        logger.info("Dataset tweet_eval loaded successfully.")
+        logger.debug("DatasetDict loaded successfully.")
         self.train = dataset_dict["train"]
         self.dev = dataset_dict["validation"]
         self.test = dataset_dict["test"]
+        logger.info("Dataset tweet_eval loaded successfully.")
 
     def __str__(self):
         return self.__class__.__name__

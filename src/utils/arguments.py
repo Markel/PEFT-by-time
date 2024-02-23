@@ -11,6 +11,8 @@ class Args(argparse.Namespace):
     but including a property for each entry parameter.
     """
 
+    # Name of the dataset to use.
+    dataset: Literal["tweet_eval"]
     # The level for the logging https://docs.python.org/3/library/logging.html#logging-levels
     debug: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
     # The model to use. "small","base","large","xl","xxl" should be defaulted to T5v1.1 versions.
@@ -46,6 +48,8 @@ def parse_args() -> Args:
                                              specific parameter',
                                        required=True)
 
+    parser.add_argument("-d", "--dataset", type=str, required=True, help="The dataset to use.",
+                        choices=["tweet_eval"])
     parser.add_argument("--debug", type=str, default="INFO", help="The log level to use.",
                         choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"])
     parser.add_argument("-m", "--model", type=str, default="base",
