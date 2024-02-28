@@ -9,6 +9,7 @@ from abc import ABC, abstractmethod
 from huggingface_hub import snapshot_download
 from datasets.arrow_dataset import Dataset
 from datasets.utils.logging import disable_progress_bar
+from torch.nn import Module
 from torchmetrics import MetricCollection
 
 logger = logging.getLogger("m.dataset.base_dataset")
@@ -42,6 +43,12 @@ class BaseDataset(ABC):
         """
         This method will return an evaluate a combination that contain the corresponding
         metrics to evaluate the dataset. Note that this combination may be of len(1)
+        """
+
+    @abstractmethod
+    def get_loss_function(self) -> Module:
+        """
+        This method will return the loss function to use for the dataset.
         """
 
 if __name__ == "__main__":

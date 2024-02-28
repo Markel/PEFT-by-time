@@ -81,7 +81,7 @@ def convert_to_lora(model: T5Model,
     logger.debug("LoRA configuration created successfully.")
     peft_model = get_peft_model(model, config)
     peft_model = cast(PeftModel, peft_model)
-    logger.info("New model's (LoRA) trainable parameters: %s. Previous: %s (%s%s).",
+    logger.info("New model's (LoRA) trainable parameters: %s. Total: %s (%s%s).",
                 peft_model.get_nb_trainable_parameters()[0],
                 peft_model.get_nb_trainable_parameters()[1],
                 round(100 * peft_model.get_nb_trainable_parameters()[0]
