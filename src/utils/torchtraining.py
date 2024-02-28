@@ -52,16 +52,32 @@ def init_wandb(args: Args) -> Run:
     )
     return cast(Run, my_run)
 
-def train_entire(model: PeftModel, tokenizer: T5TokenizerFast, data: DataLoader, optimizer: Optimizer, loss, args: Args) -> None:
+def train_entire(model: PeftModel,
+                 tokenizer: T5TokenizerFast,
+                 data: DataLoader,
+                 optimizer: Optimizer,
+                 loss,
+                 args: Args
+                 ) -> None:
     model.train()
 
+def get_data_loaders(dataset: BaseDataset,
+                     args: Args
+                     ) -> tuple[tuple[list[DataLoader], int], DataLoader, DataLoader]:
+    """
+    Get data loaders for training, development, and testing. The train loader will be split
+    into shards for easier training by steps.
 
+    Args:
+        dataset (BaseDataset): The dataset object containing train, dev, and test data.
+        args (Args): The arguments object containing batch size and evaluation frequency.
 
-def full_training(model: PeftModel, tokenizer: T5TokenizerFast, dataset: BaseDataset, args: Args) -> None:
-    logger.debug("Starting full training")
-    run = init_wandb(args)
-    logger.info("Weights and Biases run: %s (%s)", run.name, run.id)
-
+    Returns:
+        tuple: A tuple containing:
+            - A tuple of train loaders and the number of shards.
+            - The development loader.
+            - The test loader.
+    """
     number_of_shards = ceil(len(dataset.train)/args.eval_every)
     logger.debug("Dividing the training dataset into %d shards", number_of_shards)
 
@@ -72,15 +88,27 @@ def full_training(model: PeftModel, tokenizer: T5TokenizerFast, dataset: BaseDat
         )
         for i in range(number_of_shards)
     ]
-    dev_loader   = DataLoader(dataset.dev, # type: ignore
-                              batch_size=args.batch_size, shuffle=False)
-    test_loader  = DataLoader(dataset.test, # type: ignore
-                              batch_size=args.batch_size, shuffle=False)
+    dev_loader    = DataLoader(dataset.dev, # type: ignore
+                               batch_size=args.batch_size, shuffle=False)
+    test_loader   = DataLoader(dataset.test, # type: ignore
+                               batch_size=args.batch_size, shuffle=False)
 
+    return ((train_loaders, number_of_shards), dev_loader, test_loader)
+
+def full_training(model: PeftModel,
+                  tokenizer: T5TokenizerFast,
+                  dataset: BaseDataset,
+                  args: Args
+                  ) -> None:
+    logger.debug("Starting full training")
+    run = init_wandb(args)
+    logger.info("Weights and Biases run: %s (%s)", run.name, run.id)
+
+    (train_loaders, number_of_shards), dev_loader, test_loader = get_data_loaders(dataset, args)
     loss = dataset.get_loss_function() # There's no specific type :(
     optimizer = torch.optim.Adam(get_trainable_params(model), lr=args.learning_rate)
 
-    datasetpost = dataset.train.map(lambda examples: {"labels": examples["label"]}, batched=True)
+    # TODO: Get the testers in place
 
     iters_need = number_of_shards * args.epochs
     logger.debug("%d iterations are going to be required", iters_need)
@@ -89,18 +117,21 @@ def full_training(model: PeftModel, tokenizer: T5TokenizerFast, dataset: BaseDat
     steps_done: int = 0
     time_done: int = 0
 
-    for iter in range(iters_need):
-        loader_index = iter % number_of_shards
-        for data in train_loaders[loader_index]:
-            print(data)
+    for iteration in range(iters_need):
+        loader_index = iteration % number_of_shards
+        # TODO: If iteration 0 reset train tester
+        # TODO: Train the model
+        # TODO: Calculate corresponding train loss
+        # TODO: Calculate dev loss & reset tester
+        # TODO: Calculate test loss & reset tester
+        # TODO: Calculate steps, time and FLOPs
+        # TODO: Log everything to W&B
         break
-        #print(f"Step {step_init} - {cut_final}/{iters_need}")
 
 
     wandb.log({"train_loss": 0.2, "dev_loss": 0.3, "test_loss": 0.1})
 
     run.finish()
-    return
 """
     wandb.watch(model, log="all")
     model.train()
