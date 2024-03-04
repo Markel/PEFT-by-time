@@ -12,17 +12,17 @@ from typing import cast
 from peft.mapping import get_peft_model
 from peft.peft_model import PeftModel
 from peft.tuners.lora.config import LoraConfig
-from transformers import T5Model
+from transformers import T5ForConditionalGeneration
 from ..utils.arguments import Args
 
 logger = logging.getLogger("m.models.peft_convert")
 
-def convert_to_peft(model: T5Model, args: Args) -> PeftModel:
+def convert_to_peft(model: T5ForConditionalGeneration, args: Args) -> PeftModel:
     """
     Converts the given T5 model to a PeftModel based on the specified method.
 
     Args:
-        model (T5Model): The T5 model to be converted.
+        model (T5ForConditionalGeneration): The T5 model to be converted.
         args (Args): The inline arguments of the program.
 
     Returns:
@@ -46,7 +46,7 @@ def convert_to_peft(model: T5Model, args: Args) -> PeftModel:
         raise ValueError("Method not recognized.")
     return peft_model
 
-def convert_to_lora(model: T5Model,
+def convert_to_lora(model: T5ForConditionalGeneration,
                     rank: int, alpha: int,
                     dropout: float,
                     target_modules: list[str],
@@ -55,7 +55,7 @@ def convert_to_lora(model: T5Model,
     Converts a given T5Model to a PeftModel with LoRA configuration.
 
     Args:
-        model (T5Model): The T5Model to convert.
+        model (T5ForConditionalGeneration): The T5Model to convert.
         rank (int): The rank parameter for LoRA.
         alpha (int): The alpha parameter for LoRA.
         dropout (float): The dropout rate for LoRA.

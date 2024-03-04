@@ -26,9 +26,9 @@ def main() -> None:
     load_dotenv()
     logger.info("Environment variables loaded successfully")
 
-    model, tokenizer = download_model(ARGS.model, DEVICE) # pylint: disable=unused-variable
+    model, tokenizer = download_model(ARGS.model, DEVICE)
     model   = convert_to_peft(model, ARGS)
-    dataset = download_dataset(ARGS.dataset, DEVICE) # pylint: disable=unused-variable
+    dataset = download_dataset(ARGS.dataset, tokenizer, DEVICE)
 
     os.environ["WANDB_SILENT"] = "true"
     if "WANDB_API_KEY" not in os.environ:
@@ -36,4 +36,4 @@ def main() -> None:
     wandb.login(anonymous="never", key=os.environ["WANDB_API_KEY"], verify=True, force=True)
     logger.info("Logged in to Weights and Biases successfully")
 
-    full_training(model, tokenizer, dataset, ARGS)
+    full_training(model, tokenizer, dataset, ARGS, DEVICE)

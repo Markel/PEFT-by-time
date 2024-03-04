@@ -1,11 +1,13 @@
 import logging
 from math import ceil
-from typing import cast
+from typing import Callable, cast
+import time
 import torch
 from torch.utils.data import DataLoader
 from torch.optim import Optimizer
 
 from peft.peft_model import PeftModel
+from torchmetrics import MetricCollection
 from transformers import T5TokenizerFast
 from wandb.sdk.wandb_run import Run
 
@@ -52,14 +54,57 @@ def init_wandb(args: Args) -> Run:
     )
     return cast(Run, my_run)
 
-def train_entire(model: PeftModel,
-                 tokenizer: T5TokenizerFast,
-                 data: DataLoader,
-                 optimizer: Optimizer,
-                 loss,
-                 args: Args
-                 ) -> None:
+def train_entire_batch(model: PeftModel,
+                       tokenizer: T5TokenizerFast,
+                       data: DataLoader,
+                       optimizer: Optimizer,
+                       eval_tests: MetricCollection,
+                       pre_eval_func: Callable,
+                       running_loss: float,
+                       ) -> tuple[PeftModel, float, MetricCollection]:
     model.train()
+    for batch in data:
+        optimizer.zero_grad()
+        input_ids      = batch["input_ids"]
+        attention_mask = batch["attention_mask"]
+        token_labels   = batch["token_labels"]
+        labels         = batch["labels"]
+        token_labels[token_labels == tokenizer.pad_token_id] = -100
+
+        outputs = model(input_ids=input_ids, attention_mask=attention_mask, labels=token_labels)
+        loss = outputs.loss
+        loss.backward()
+        running_loss += loss.item()
+        output_labels = pre_eval_func(outputs)
+        #print("Ou", output_labels, "LA", labels)
+        eval_tests.update(output_labels, labels)
+        optimizer.step()
+    return model, running_loss, eval_tests
+
+def test_batch(model: PeftModel,
+               tokenizer: T5TokenizerFast,
+               data: DataLoader,
+               eval_tests: MetricCollection,
+               pre_eval_func: Callable
+               ) -> tuple[MetricCollection, float]:
+    model.eval()
+    total_loss = 0.0
+    for batch in data:
+        input_ids      = batch["input_ids"]
+        attention_mask = batch["attention_mask"]
+        token_labels   = batch["token_labels"]
+        labels         = batch["labels"]
+        token_labels[token_labels == tokenizer.pad_token_id] = -100
+
+        # Mirar de cambiar a inference
+        with torch.no_grad():
+            outputs = model(input_ids=input_ids, attention_mask=attention_mask, labels=token_labels)
+            loss = outputs.loss
+            total_loss += loss.item()
+        output_labels = pre_eval_func(outputs)
+        eval_tests.update(output_labels, labels)
+    total_loss /= len(data.dataset) # type: ignore
+    return eval_tests, total_loss
 
 def get_data_loaders(dataset: BaseDataset,
                      args: Args
@@ -98,7 +143,8 @@ def get_data_loaders(dataset: BaseDataset,
 def full_training(model: PeftModel,
                   tokenizer: T5TokenizerFast,
                   dataset: BaseDataset,
-                  args: Args
+                  args: Args,
+                  device: torch.device
                   ) -> None:
     logger.debug("Starting full training")
     run = init_wandb(args)
@@ -108,30 +154,69 @@ def full_training(model: PeftModel,
     loss = dataset.get_loss_function() # There's no specific type :(
     optimizer = torch.optim.Adam(get_trainable_params(model), lr=args.learning_rate)
 
-    # TODO: Get the testers in place
+    train_tests = dataset.get_eval_methods(device)
+    dev_tests   = dataset.get_eval_methods(device)
+    test_tests  = dataset.get_eval_methods(device)
 
     iters_need = number_of_shards * args.epochs
     logger.debug("%d iterations are going to be required", iters_need)
-    #steps_eval = args.eval_every if args.eval_every > 0 else len(dataset.train)
 
     steps_done: int = 0
-    time_done: int = 0
+    time_done : float = 0 # In seconds
+
+    running_loss: float = 0.0
 
     for iteration in range(iters_need):
         loader_index = iteration % number_of_shards
-        # TODO: If iteration 0 reset train tester
-        # TODO: Train the model
-        # TODO: Calculate corresponding train loss
-        # TODO: Calculate dev loss & reset tester
-        # TODO: Calculate test loss & reset tester
-        # TODO: Calculate steps, time and FLOPs
-        # TODO: Log everything to W&B
-        break
+        logger.debug("Iteration %d, loader index %d", iteration, loader_index)
+        #* If iteration 0 reset train tester
+        if loader_index == 0:
+            train_tests.reset()
+            running_loss = 0.0
 
+        logger.debug("Starting to train, iteration %d", iteration)
+        start_time = time.time()
+        model, running_loss, train_tests = train_entire_batch(model, tokenizer, train_loaders[loader_index], optimizer, train_tests, dataset.pre_eval_func, running_loss)
+        end_time = time.time()
+        steps_done += len(train_loaders[loader_index].dataset) # type: ignore
+        time_done += (end_time - start_time)
 
-    wandb.log({"train_loss": 0.2, "dev_loss": 0.3, "test_loss": 0.1})
+        train_results = train_tests.compute()
+        train_results = {f"train_{key}": value for key, value in train_results.items()}
 
+        logger.debug("Starting to evaluate dev, iteration %d", iteration)
+        dev_tests, dev_loss = test_batch(model, tokenizer, dev_loader, dev_tests, dataset.pre_eval_func)
+        dev_results = dev_tests.compute()
+        dev_tests.reset()
+        dev_results = {f"dev_{key}": value for key, value in dev_results.items()}
+
+        logger.debug("Starting to evaluate test, iteration %d", iteration)
+        test_tests, test_loss = test_batch(model, tokenizer, test_loader, test_tests, dataset.pre_eval_func)
+        test_results = test_tests.compute()
+        test_tests.reset()
+        test_results = {f"test_{key}": value for key, value in test_results.items()}
+
+        results = {**train_results, **dev_results, **test_results,
+                   "train_loss": running_loss/steps_done,
+                   "dev_loss": dev_loss,
+                   "test_loss": test_loss,
+                   "learning_rate": optimizer.param_groups[0]["lr"],
+                   "step": steps_done, "time": time_done}
+
+        wandb.log(results)
+
+        if loader_index == number_of_shards - 1:
+            logger.info("Epoch %d done. Results: %s", iteration // number_of_shards, results)
+        # TODO: Check -ee=300 (what's happening)
+        # TODO: Check that get_trainable_params is doing it okay
+        # TODO: Add FLOP calculation
+        # TODO: Document the code
+        # TODO: Save the results to a file
+        # TODO: Listen to pylint
+        # TODO: Some kind of model saving?
     run.finish()
+    return
+
 """
     wandb.watch(model, log="all")
     model.train()

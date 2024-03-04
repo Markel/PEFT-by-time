@@ -18,10 +18,10 @@ Install the dependencies:
 pip install -r requirements.txt --find-links https://download.pytorch.org/whl/torch_stable.html
 ```
 
-## Usage
+## Example usage
 
 ```bash
-python peft.py
+python main.py -d=tweet_eval -e=2 -ee=300 --debug=DEBUG LoRA -r=2 -a=2 -d=0.1
 ```
 
 ## Linting
