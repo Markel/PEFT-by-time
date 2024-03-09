@@ -14,6 +14,7 @@ from wandb.sdk.wandb_run import Run
 import wandb
 
 from ..utils.torchfuncs import get_trainable_params, save_results_file
+from ..utils.torch_flops import FlopCounterMode
 
 from ..dataset.base_dataset import BaseDataset
 from .arguments import Args
@@ -167,8 +168,9 @@ def full_training(model: PeftModel,
     iters_need = number_of_shards * args.epochs
     logger.debug("%d iterations are going to be required", iters_need)
 
-    steps_done: int = 0
-    time_done : float = 0 # In seconds
+    steps_done : int = 0
+    time_done  : float = 0.0 # In seconds
+    GFlops_done: float = 0.0
 
     running_loss: float = 0.0
 
@@ -181,9 +183,13 @@ def full_training(model: PeftModel,
             running_loss = 0.0
 
         logger.debug("Starting to train, iteration %d", iteration)
-        start_time = time.time()
-        model, running_loss, train_tests = train_entire_batch(model, tokenizer, train_loaders[loader_index], optimizer, train_tests, dataset.pre_eval_func, running_loss)
-        end_time = time.time()
+        
+        f_counter = FlopCounterMode(model)
+        with f_counter:
+            start_time = time.time()
+            model, running_loss, train_tests = train_entire_batch(model, tokenizer, train_loaders[loader_index], optimizer, train_tests, dataset.pre_eval_func, running_loss)
+            end_time = time.time()
+        GFlops_done += f_counter.get_total()
         steps_done += len(train_loaders[loader_index].dataset) # type: ignore
         time_done += (end_time - start_time)
 
@@ -209,7 +215,7 @@ def full_training(model: PeftModel,
                    "learning_rate": optimizer.param_groups[0]["lr"],
                    "step": steps_done, "iteration": iteration,
                    "epoch": iteration // number_of_shards,
-                   "time": time_done}
+                   "time": time_done, "GFlops": GFlops_done}
 
         save_results_file(results, run.name, run.id)
         wandb.log(results) # TODO: Check if convert to int is needed for x axis
