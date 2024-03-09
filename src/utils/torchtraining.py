@@ -13,7 +13,7 @@ from wandb.sdk.wandb_run import Run
 
 import wandb
 
-from ..utils.torchfuncs import get_trainable_params
+from ..utils.torchfuncs import get_trainable_params, save_results_file
 
 from ..dataset.base_dataset import BaseDataset
 from .arguments import Args
@@ -188,29 +188,31 @@ def full_training(model: PeftModel,
         time_done += (end_time - start_time)
 
         train_results = train_tests.compute()
-        train_results = {f"train_{key}": value for key, value in train_results.items()}
+        train_results = {f"train_{key}": value.item() for key, value in train_results.items()}
 
         logger.debug("Starting to evaluate dev, iteration %d", iteration)
         dev_tests, dev_loss = test_batch(model, tokenizer, dev_loader, dev_tests, dataset.pre_eval_func)
         dev_results = dev_tests.compute()
         dev_tests.reset()
-        dev_results = {f"dev_{key}": value for key, value in dev_results.items()}
+        dev_results = {f"dev_{key}": value.item() for key, value in dev_results.items()}
 
         logger.debug("Starting to evaluate test, iteration %d", iteration)
         test_tests, test_loss = test_batch(model, tokenizer, test_loader, test_tests, dataset.pre_eval_func)
         test_results = test_tests.compute()
         test_tests.reset()
-        test_results = {f"test_{key}": value for key, value in test_results.items()}
+        test_results = {f"test_{key}": value.item() for key, value in test_results.items()}
 
         results = {**train_results, **dev_results, **test_results,
                    "train_loss": running_loss/steps_done,
                    "dev_loss": dev_loss,
                    "test_loss": test_loss,
                    "learning_rate": optimizer.param_groups[0]["lr"],
-                   "step": steps_done, "epoch": iteration // number_of_shards,
+                   "step": steps_done, "iteration": iteration,
+                   "epoch": iteration // number_of_shards,
                    "time": time_done}
 
-        wandb.log(results)
+        save_results_file(results, run.name, run.id)
+        wandb.log(results) # TODO: Check if convert to int is needed for x axis
 
         if loader_index == number_of_shards - 1:
             logger.info("Epoch %d done. Results: %s", iteration // number_of_shards, results)
@@ -218,7 +220,6 @@ def full_training(model: PeftModel,
         # TODO: Check that get_trainable_params is doing it okay
         # TODO: Add FLOP calculation
         # TODO: Document the code
-        # TODO: Save the results to a file
         # TODO: Listen to pylint
         # TODO: Some kind of model saving?
         # TODO: Adam LR - scheduler
