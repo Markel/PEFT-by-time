@@ -1,8 +1,11 @@
 """ This module contains utility functions for working with PyTorch tensors. """
 
 import json
+import os
+
 import torch
 from peft.peft_model import PeftModel
+
 
 def get_device() -> torch.device:
     """
@@ -52,6 +55,8 @@ def save_results_file(dictionary_list: dict, run_name: str, run_id: str):
     Returns:
         None
     """
+    if not os.path.exists("results"):
+        os.makedirs("results")
     existing_dicts = load_results_file(run_name, run_id)
     existing_dicts.append(dictionary_list)
     filename = f"results/{run_name}-{run_id}.json"
