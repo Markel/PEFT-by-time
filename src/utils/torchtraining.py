@@ -152,7 +152,13 @@ def full_training(model: PeftModel,
 
     (train_loaders, number_of_shards), dev_loader, test_loader = get_data_loaders(dataset, args)
     loss = dataset.get_loss_function() # There's no specific type :(
+    # TODO: Remove loss as CrossEntropy is used internally
+    
+    train_params = get_trainable_params(model)
+    num_trainable_params = sum(p.numel() for p in train_params)
+    logger.debug("Number of trainable parameters: %d", num_trainable_params)
     optimizer = torch.optim.Adam(get_trainable_params(model), lr=args.learning_rate)
+    # TODO: Maybe AdaFactor? As the original paper.
 
     train_tests = dataset.get_eval_methods(device)
     dev_tests   = dataset.get_eval_methods(device)
@@ -201,7 +207,8 @@ def full_training(model: PeftModel,
                    "dev_loss": dev_loss,
                    "test_loss": test_loss,
                    "learning_rate": optimizer.param_groups[0]["lr"],
-                   "step": steps_done, "time": time_done}
+                   "step": steps_done, "epoch": iteration // number_of_shards,
+                   "time": time_done}
 
         wandb.log(results)
 
@@ -214,6 +221,7 @@ def full_training(model: PeftModel,
         # TODO: Save the results to a file
         # TODO: Listen to pylint
         # TODO: Some kind of model saving?
+        # TODO: Adam LR - scheduler
     run.finish()
     return
 
