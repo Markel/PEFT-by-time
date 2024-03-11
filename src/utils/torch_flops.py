@@ -191,7 +191,12 @@ class FlopCounterMode(TorchDispatchMode):
 
     # Change
     def get_total(self) -> float:
-        return sum(self.flop_counts['Global'].values())/1e9
+        total: float = 0.0
+        #total += sum(self.flop_counts['Global'].values())/1e9
+        for mod in self.flop_counts.keys():
+            for v in self.flop_counts[mod].values():
+                total += v/1e9
+        return total
 
     def __enter__(self):
         self.flop_counts.clear()

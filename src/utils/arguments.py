@@ -29,7 +29,7 @@ class Args(argparse.Namespace):
     # The model to use.
     model: str
     # The method to use.
-    method: Literal["LoRA"]
+    method: Literal["LoRA", "FT"]
     # If the output should be colored.
     no_color: bool
 
@@ -105,6 +105,11 @@ def parse_args() -> Args:
     parser_lora.add_argument('-t', '--target_modules', type=str, nargs='+',
                              default=["q", "v"],
                              help='The modules to target. Default to ["q", "v"].')
+
+    #* Full fine-tuning
+    # pylint: disable=unused-variable
+    parser_ft = subparsers.add_parser('FT', help='Full fine-tuning')
+    # pylint: enable=unused-variable
 
     arguments = parser.parse_args()
     return cast(Args, arguments)

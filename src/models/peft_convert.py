@@ -41,6 +41,9 @@ def convert_to_peft(model: T5ForConditionalGeneration, args: Args) -> PeftModel:
 
         peft_model = convert_to_lora(model,
                                      args.rank, args.alpha, args.dropout, args.target_modules)
+    elif args.method == "FT":
+        logger.debug("Method selected: Full fine-tuning. Proceeding to \"convert\" the model.")
+        peft_model = dummy_FT_convert(model)
     else:
         logger.critical("Method %s not recognized, parser should have failed.", args.method)
         raise ValueError("Method not recognized.")
@@ -88,3 +91,25 @@ def convert_to_lora(model: T5ForConditionalGeneration,
                       / peft_model.get_nb_trainable_parameters()[1], 5),
                 "%")
     return peft_model
+
+def dummy_FT_convert(model: T5ForConditionalGeneration) -> PeftModel:
+    """
+    Dummy function to convert a model to a "Full fine-tuning" model.
+
+    Args:
+        model (T5ForConditionalGeneration): The model to convert.
+
+    Returns:
+        PeftModel: The converted model.
+
+    Notes:
+        - This function is a placeholder for future implementations.
+    """
+    logger.debug("Dummy function to convert to Full fine-tuning model.")
+    # Count number of parameters
+    logger.info("New model's (Full fine-tuning) trainable parameters: %s. Total: %s (%s%s).",
+                model.num_parameters(only_trainable=True),
+                model.num_parameters(),
+                100,
+                "%")
+    return cast(PeftModel, model)

@@ -216,6 +216,7 @@ def full_training(model: PeftModel,
                    "step": steps_done, "iteration": iteration,
                    "epoch": iteration // number_of_shards,
                    "time": time_done, "GFlops": GFlops_done}
+        # TODO: Cambiar nombres a steps y así
 
         save_results_file(results, run.name, run.id)
         wandb.log(results) # TODO: Check if convert to int is needed for x axis
@@ -223,8 +224,7 @@ def full_training(model: PeftModel,
         if loader_index == number_of_shards - 1:
             logger.info("Epoch %d done. Results: %s", iteration // number_of_shards, results)
         # TODO: Check -ee=300 (what's happening)
-        # TODO: Check that get_trainable_params is doing it okay
-        # TODO: Add FLOP calculation
+        # TODO: Check FLOP calculation
         # TODO: Document the code
         # TODO: Listen to pylint
         # TODO: Some kind of model saving?
@@ -232,58 +232,3 @@ def full_training(model: PeftModel,
     run.finish()
     return
 
-"""
-    wandb.watch(model, log="all")
-    model.train()
-    model.to(args.device)
-    optimizer = AdamW(model.parameters(), lr=args.learning_rate)
-
-    for epoch in range(args.epochs):
-        for batch in train_loader:
-            optimizer.zero_grad()
-            input_ids = batch["input_ids"].to(args.device)
-            attention_mask = batch["attention_mask"].to(args.device)
-            labels = batch["labels"].to(args.device)
-            outputs = model(input_ids=input_ids, attention_mask=attention_mask, labels=labels)
-            loss = outputs.loss
-            loss.backward()
-            optimizer.step()
-            wandb.log({"loss": loss.item()})
-    wandb.finish()
-"""
-"""
-def train_one_epoch(epoch_index, tb_writer):
-    running_loss = 0.
-    last_loss = 0.
-
-    # Here, we use enumerate(training_loader) instead of
-    # iter(training_loader) so that we can track the batch
-    # index and do some intra-epoch reporting
-    for i, data in enumerate(training_loader):
-        # Every data instance is an input + label pair
-        inputs, labels = data
-
-        # Zero your gradients for every batch!
-        optimizer.zero_grad()
-
-        # Make predictions for this batch
-        outputs = model(inputs)
-
-        # Compute the loss and its gradients
-        loss = loss_fn(outputs, labels)
-        loss.backward()
-
-        # Adjust learning weights
-        optimizer.step()
-
-        # Gather data and report
-        running_loss += loss.item()
-        if i % 1000 == 999:
-            last_loss = running_loss / 1000 # loss per batch
-            print('  batch {} loss: {}'.format(i + 1, last_loss))
-            tb_x = epoch_index * len(training_loader) + i + 1
-            tb_writer.add_scalar('Loss/train', last_loss, tb_x)
-            running_loss = 0.
-
-    return last_loss
-"""
