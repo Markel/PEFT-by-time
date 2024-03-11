@@ -152,8 +152,6 @@ def full_training(model: PeftModel,
     logger.info("Weights and Biases run: %s (%s)", run.name, run.id)
 
     (train_loaders, number_of_shards), dev_loader, test_loader = get_data_loaders(dataset, args)
-    loss = dataset.get_loss_function() # There's no specific type :(
-    # TODO: Remove loss as CrossEntropy is used internally
     
     train_params = get_trainable_params(model)
     num_trainable_params = sum(p.numel() for p in train_params)

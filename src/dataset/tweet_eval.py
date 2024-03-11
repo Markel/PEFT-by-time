@@ -14,8 +14,6 @@ from typing import cast
 from datasets import DatasetDict, load_dataset
 from torch import Tensor, device
 import torch
-from torch.nn import MSELoss
-from torch.nn.modules import Module
 from torchmetrics import MetricCollection
 from torchmetrics.classification import (BinaryAccuracy, BinaryF1Score,
                                          BinaryPrecision, BinaryRecall)
@@ -78,11 +76,6 @@ class TweetEvalHate(BaseDataset):
         output_label = [1 if x == self.pos else 0 for x in output_label]
         output_label = torch.tensor(output_label).to(batch.logits.get_device())
         return output_label
-
-    def get_loss_function(self) -> Module:
-        return MSELoss()
-
-    # TODO: Delete loss function
 
 if __name__ == "__main__":
     logger.critical("Module not meant to be run as a script. Exiting.")

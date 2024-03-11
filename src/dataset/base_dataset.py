@@ -53,11 +53,5 @@ class BaseDataset(ABC):
         of the model.
         """
 
-    @abstractmethod
-    def get_loss_function(self) -> Module:
-        """
-        This method will return the loss function to use for the dataset.
-        """
-
 if __name__ == "__main__":
     logger.critical("Module not meant to be run as a script. Exiting.")
