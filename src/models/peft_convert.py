@@ -43,7 +43,7 @@ def convert_to_peft(model: T5ForConditionalGeneration, args: Args) -> PeftModel:
                                      args.rank, args.alpha, args.dropout, args.target_modules)
     elif args.method == "FT":
         logger.debug("Method selected: Full fine-tuning. Proceeding to \"convert\" the model.")
-        peft_model = dummy_FT_convert(model)
+        peft_model = dummy_fft_convert(model)
     else:
         logger.critical("Method %s not recognized, parser should have failed.", args.method)
         raise ValueError("Method not recognized.")
@@ -92,7 +92,7 @@ def convert_to_lora(model: T5ForConditionalGeneration,
                 "%")
     return peft_model
 
-def dummy_FT_convert(model: T5ForConditionalGeneration) -> PeftModel:
+def dummy_fft_convert(model: T5ForConditionalGeneration) -> PeftModel:
     """
     Dummy function to convert a model to a "Full fine-tuning" model.
 

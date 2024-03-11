@@ -10,7 +10,6 @@ from huggingface_hub import snapshot_download
 from datasets.arrow_dataset import Dataset
 from datasets.utils.logging import disable_progress_bar
 from torch import Tensor, device
-from torch.nn import Module
 from torchmetrics import MetricCollection
 
 logger = logging.getLogger("m.dataset.base_dataset")

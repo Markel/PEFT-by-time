@@ -11,7 +11,8 @@ from transformers import T5TokenizerFast, T5ForConditionalGeneration
 
 logger = logging.getLogger("m.models.orig_model")
 
-def download_model(model: str, init_device: device) -> tuple[T5ForConditionalGeneration, T5TokenizerFast]:
+def download_model(model: str, init_device: device
+                   ) -> tuple[T5ForConditionalGeneration, T5TokenizerFast]:
     """
     Given the name of a model it download the corresponding model from Huggingface.
     If already downloaded it just loads the model.
@@ -50,7 +51,8 @@ def download_model(model: str, init_device: device) -> tuple[T5ForConditionalGen
     logger.debug("Model identified successfully. Proceeding to load the tokenizer and model.")
 
     tokenizer: T5TokenizerFast = T5TokenizerFast.from_pretrained(model_dir, local_files_only=True)
-    model_hug  = T5ForConditionalGeneration.from_pretrained(model_dir, local_files_only=True, device_map=init_device)
+    model_hug  = T5ForConditionalGeneration.from_pretrained(model_dir, local_files_only=True,
+                                                            device_map=init_device)
     model_hug  = cast(T5ForConditionalGeneration, model_hug)
     logger.debug("Model and tokenizer loaded successfully.")
 

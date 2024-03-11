@@ -2,9 +2,15 @@
 
 import json
 import os
+from typing import cast
 
 import torch
 from peft.peft_model import PeftModel
+from wandb.sdk.wandb_run import Run
+
+import wandb
+
+from .arguments import Args
 
 
 def get_device() -> torch.device:
@@ -62,3 +68,37 @@ def save_results_file(dictionary_list: dict, run_name: str, run_id: str):
     filename = f"results/{run_name}-{run_id}.json"
     with open(filename, 'w', encoding='utf-8') as file:
         json.dump(existing_dicts, file, indent=2)
+
+def get_wandb_experiment_name(args: Args) -> str:
+    """
+    Returns the experiment name for logging to Weights & Biases (wandb).
+
+    Args:
+        args (Args): The command line arguments.
+
+    Returns:
+        str: The experiment name.
+    """
+    if args.experiment_name is not None:
+        return args.experiment_name
+    return f"{args.method}_{args.model}_{args.dataset}"
+
+def init_wandb(args: Args) -> Run:
+    """
+    Initializes and returns a Weights & Biases run object.
+
+    Args:
+        args (Args): An instance of the Args class containing the configuration parameters.
+
+    Returns:
+        Run: A Weights & Biases run object.
+
+    """
+    args_dict = args.__dict__.copy()
+    del args_dict["project"], args_dict["experiment_name"]
+    my_run = wandb.init(
+        project=args.project,
+        name=get_wandb_experiment_name(args),
+        config=args_dict
+    )
+    return cast(Run, my_run)
