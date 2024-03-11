@@ -17,8 +17,8 @@ import torch
 from torch.nn import MSELoss
 from torch.nn.modules import Module
 from torchmetrics import MetricCollection
-from torchmetrics.classification import (MulticlassAccuracy, MulticlassF1Score,
-                                         MulticlassPrecision, MulticlassRecall)
+from torchmetrics.classification import (BinaryAccuracy, BinaryF1Score,
+                                         BinaryPrecision, BinaryRecall)
 from transformers import T5TokenizerFast
 
 from .base_dataset import BaseDataset
@@ -61,25 +61,28 @@ class TweetEvalHate(BaseDataset):
         return self.__class__.__name__
 
     def get_eval_methods(self, device_t: device) -> MetricCollection:
-        # I use multiclass to leave out as 0 the starting non-sensical text.
-        # Posdata: They should be the same because they are micro.
+        # Negative answers are considered for all cases where it doens't match the
+        # positive label. However, when computing the loss, these are independent classes.
         metric_collection = MetricCollection([
-            MulticlassAccuracy(3, average="micro"),
-            MulticlassPrecision(3, average="micro"),
-            MulticlassRecall(3, average="micro"),
-            MulticlassF1Score(3, average="micro")
+            BinaryAccuracy(),
+            BinaryPrecision(),
+            BinaryRecall(),
+            BinaryF1Score()
         ]).to(device_t)
         return metric_collection
 
     def pre_eval_func(self, batch) -> Tensor:
         output_label = batch.logits.argmax(-1)
+        #print(output_label)
         output_label = output_label.tolist()
-        output_label = [1 if x == self.pos else 0 if x == self.neg else -1 for x in output_label]
+        output_label = [1 if x == self.pos else 0 for x in output_label]
         output_label = torch.tensor(output_label).to(batch.logits.get_device())
         return output_label
 
     def get_loss_function(self) -> Module:
         return MSELoss()
+
+    # TODO: Delete loss function
 
 if __name__ == "__main__":
     logger.critical("Module not meant to be run as a script. Exiting.")
