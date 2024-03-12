@@ -47,7 +47,7 @@ def get_data_loaders(dataset: BaseDataset,
     train_loaders = [
         DataLoader(
             dataset.train.shard(number_of_shards, i, contiguous=True), # type: ignore
-            batch_size=args.batch_size, shuffle=False
+            batch_size=args.batch_size, shuffle=False,
         )
         for i in range(number_of_shards)
     ]
@@ -170,7 +170,7 @@ def full_training(model: PeftModel,
     num_trainable_params = sum(p.numel() for p in train_params)
     logger.debug("Number of trainable parameters: %d", num_trainable_params)
     optimizer = torch.optim.Adam(get_trainable_params(model), lr=args.learning_rate)
-    # TODO: Maybe AdaFactor? As the original paper.
+    # TODO: Maybe AdaFactor? As the original paper. => Begiratu, ondo
 
     train_tests = dataset.get_eval_methods(device)
     dev_tests   = dataset.get_eval_methods(device)
@@ -247,8 +247,6 @@ def full_training(model: PeftModel,
             logger.info("Epoch %d done. Results: %s", iteration // number_of_shards, results)
         # TODO: Check -ee=300 (what's happening)
         # TODO: Check FLOP calculation
-        # TODO: Document the code
-        # TODO: Listen to pylint
         # TODO: Some kind of model saving?
         # TODO: Adam LR - scheduler
     run.finish()

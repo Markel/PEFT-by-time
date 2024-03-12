@@ -45,8 +45,8 @@ class TweetEvalHate(BaseDataset):
         )
         dataset_dict = dataset_dict.rename_column("label", "labels")
         dataset_dict = dataset_dict.map(
-            lambda x: tokenizer(x["text"], padding=True, truncation=True, return_tensors="pt"
-                                ), batched=True
+            lambda x: tokenizer(x["text"], max_length=157, padding="max_length", truncation=True,
+                                return_tensors="pt"), batched=True
         )
         logger.debug("DatasetDict converted successfully.")
 
