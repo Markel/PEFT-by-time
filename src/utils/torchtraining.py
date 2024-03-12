@@ -41,7 +41,7 @@ def get_data_loaders(dataset: BaseDataset,
             - The development loader.
             - The test loader.
     """
-    number_of_shards = ceil(len(dataset.train)/args.eval_every)
+    number_of_shards = 1 if args.eval_every <= 0 else ceil(len(dataset.train)/args.eval_every)
     logger.debug("Dividing the training dataset into %d shards", number_of_shards)
 
     train_loaders = [
@@ -56,6 +56,7 @@ def get_data_loaders(dataset: BaseDataset,
     test_loader   = DataLoader(dataset.test, # type: ignore
                                batch_size=args.batch_size, shuffle=False)
 
+    logger.debug("Training dataset divided into %d shards", len(train_loaders))
     return ((train_loaders, number_of_shards), dev_loader, test_loader)
 
 def train_entire_batch(model: PeftModel,
@@ -235,17 +236,16 @@ def full_training(model: PeftModel,
                    "dev_loss": dev_loss,
                    "test_loss": test_loss,
                    "learning_rate": optimizer.param_groups[0]["lr"],
-                   "step": steps_done, "iteration": iteration,
-                   "epoch": iteration // number_of_shards,
-                   "time": time_done, "GFlops": g_flops_done}
-        # TODO: Cambiar nombres a steps y así
+                   "steps_done": steps_done, "iteration": iteration,
+                   "epochs_done": iteration // number_of_shards,
+                   "time_in_train": time_done, "GFlops": g_flops_done}
 
         save_results_file(results, run.name, run.id)
         wandb.log(results)
 
         if loader_index == number_of_shards - 1:
             logger.info("Epoch %d done. Results: %s", iteration // number_of_shards, results)
-        # TODO: Check -ee=300 (what's happening)
+        # TODO: Check -ee=300 (what's happening) => Good solution?
         # TODO: Check FLOP calculation
         # TODO: Some kind of model saving?
         # TODO: Adam LR - scheduler

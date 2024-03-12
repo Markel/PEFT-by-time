@@ -97,11 +97,11 @@ def parse_args() -> Args:
     #* Lora method
     parser_lora = subparsers.add_parser('LoRA', help='Low-Rank Adaptation')
     parser_lora.add_argument('-r', '--rank', type=int,
-                             help='The rank to set LoRA to.', required=True)
+                             help='The rank to set LoRA to.', default=2)
     parser_lora.add_argument('-a', '--alpha', type=int,
-                             help='The alpha to set LoRA to.', required=True)
+                             help='The alpha to set LoRA to.', default=2)
     parser_lora.add_argument('-d', '--dropout', type=float,
-                             help='The dropout to set LoRA to.', required=True)
+                             help='The dropout to set LoRA to.', default=0.1)
     parser_lora.add_argument('-t', '--target_modules', type=str, nargs='+',
                              default=["q", "v"],
                              help='The modules to target. Default to ["q", "v"].')
