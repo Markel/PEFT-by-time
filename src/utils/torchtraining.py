@@ -3,24 +3,24 @@ This module contains the functions that will train and test the model.
 In other words, the training loop that encompasses all the other files.
 """
 import logging
+import time
 from math import ceil
 from typing import Callable
-import time
-import torch
-from torch.utils.data import DataLoader
-from torch.optim import Optimizer
 
+import torch
 from peft.peft_model import PeftModel
+from torch.optim import Optimizer
+from torch.utils.data import DataLoader
 from torchmetrics import MetricCollection
 from transformers import T5TokenizerFast
 
 import wandb
 
-from ..utils.torchfuncs import get_trainable_params, save_results_file, init_wandb
-from ..utils.torch_flops import FlopCounterMode
-
 from ..dataset.base_dataset import BaseDataset
 from .arguments import Args
+from .torch_flops import FlopCounterMode
+from .torchfuncs import (get_trainable_params, get_optimizer, init_wandb,
+                         save_results_file)
 
 logger = logging.getLogger("m.utils.torchtraining")
 
@@ -170,8 +170,8 @@ def full_training(model: PeftModel,
     train_params = get_trainable_params(model)
     num_trainable_params = sum(p.numel() for p in train_params)
     logger.debug("Number of trainable parameters: %d", num_trainable_params)
-    optimizer = torch.optim.Adam(get_trainable_params(model), lr=args.learning_rate)
-    # TODO: Maybe AdaFactor? As the original paper. => Begiratu, ondo
+
+    optimizer = get_optimizer(model, args)
 
     train_tests = dataset.get_eval_methods(device)
     dev_tests   = dataset.get_eval_methods(device)
@@ -235,7 +235,7 @@ def full_training(model: PeftModel,
                    "train_loss": running_loss/steps_done,
                    "dev_loss": dev_loss,
                    "test_loss": test_loss,
-                   "learning_rate": optimizer.param_groups[0]["lr"],
+                   # "learning_rate": optimizer.param_groups[0]["lr"],
                    "steps_done": steps_done, "iteration": iteration,
                    "epochs_done": iteration // number_of_shards,
                    "time_in_train": time_done, "GFlops": g_flops_done}
@@ -246,7 +246,6 @@ def full_training(model: PeftModel,
         if loader_index == number_of_shards - 1:
             logger.info("Epoch %d done. Results: %s", iteration // number_of_shards, results)
         # TODO: Check -ee=300 (what's happening) => Good solution?
-        # TODO: Check FLOP calculation
-        # TODO: Some kind of model saving?
-        # TODO: Adam LR - scheduler
+        # TODO: Check FLOP calculation => CRY
+        # TODO: Some kind of model saving? => Not really necessary
     run.finish()

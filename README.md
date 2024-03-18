@@ -35,7 +35,7 @@ python main.py [-h] [-b BATCH_SIZE] -d {tweet_eval} [--debug {DEBUG,INFO,WARNING
 | --debug                 | The log level to set the logger to.                                                                                                                             | INFO              |
 | -e, --epochs            | How many epochs will the model be trained on.                                                                                                                   | 10                |
 | -ee, --eval_every       | Every how many steps will the training stop and do a round of testing.                                                                                          | 1 epoch.          |
-| -lr, --learning_rate    | Learning rate of the optimizer.                                                                                                                                 | 1e-4              |
+| -lr, --learning_rate    | Learning rate of the optimizer.                                                                                                                                 | 1e-3              |
 | -m, --model             | The model to use. "small", "base", "large", "xl", "xxl" default to the corresponding T5v1.1 versions. Other models should be passed in huggingface repo format. | base              |
 | -nc, --no_color         | Disables the color from the logger.                                                                                                                             | False             |
 | -Wen, --experiment_name | Sets a custom run name for Weights&Biases                                                                                                                       |                   |

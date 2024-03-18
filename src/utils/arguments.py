@@ -32,6 +32,8 @@ class Args(argparse.Namespace):
     method: Literal["LoRA", "FT"]
     # If the output should be colored.
     no_color: bool
+    # The optimizer to use. Defaults to "adafactor".
+    optimizer: Literal["adafactor", "adam"]
 
     ##* W&B parameters
     # Custom name for the experiment.
@@ -75,7 +77,7 @@ def parse_args() -> Args:
     parser.add_argument("-ee", "--eval_every", type=int, default=-1,
                         help="Number of steps to evaluate the model. Default to -1, meaning \
                               evaluation after every epoch.")
-    parser.add_argument("-lr", "--learning_rate", type=float, default=1e-4,
+    parser.add_argument("-lr", "--learning_rate", type=float, default=1e-3,
                         help="The learning rate to use in the optimizer.")
     parser.add_argument("-m", "--model", type=str, default="base",
                         help="The model to use. \"small\", \"base\", \"large\", \"xl\", \"xxl\" \
@@ -83,6 +85,9 @@ def parse_args() -> Args:
                               be passed in huggingface repo format.")
     parser.add_argument("-nc", "--no_color", action="store_true",
                         help="Disable color in the output of the logger.")
+    parser.add_argument("-o", "--optimizer", type=str, default="adafactor",
+                        choices=["adafactor", "adam"],
+                        help="The optimizer to use. Defaults to \"adafactor\".")
 
     #** W&B
     parser.add_argument("-Wen", "--experiment_name", type=str,
