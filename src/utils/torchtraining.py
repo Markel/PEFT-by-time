@@ -18,7 +18,7 @@ import wandb
 
 from ..dataset.base_dataset import BaseDataset
 from .arguments import Args
-from .torch_flops import FlopCounterMode
+from .torch_macs import MACCounterMode
 from .torchfuncs import (get_trainable_params, get_optimizer, init_wandb,
                          save_results_file)
 
@@ -182,7 +182,7 @@ def full_training(model: PeftModel,
 
     steps_done : int = 0
     time_done  : float = 0.0 # In seconds
-    g_flops_done: float = 0.0
+    gmacs_done: float = 0.0
 
     running_loss: float = 0.0
 
@@ -199,8 +199,8 @@ def full_training(model: PeftModel,
         #* TRAINING
         logger.debug("Starting to train, iteration %d", iteration)
 
-        f_counter = FlopCounterMode(model)
-        with f_counter:
+        m_counter = MACCounterMode(model)
+        with m_counter:
             start_time = time.time()
             model, running_loss, train_tests = train_entire_batch(model, tokenizer,
                                                                   train_loaders[loader_index],
@@ -208,7 +208,7 @@ def full_training(model: PeftModel,
                                                                   dataset.pre_eval_func,
                                                                   running_loss)
             end_time = time.time()
-        g_flops_done += f_counter.get_total()
+        gmacs_done += m_counter.get_total()
         steps_done += len(train_loaders[loader_index].dataset) # type: ignore
         time_done += (end_time - start_time)
 
@@ -238,14 +238,11 @@ def full_training(model: PeftModel,
                    # "learning_rate": optimizer.param_groups[0]["lr"],
                    "steps_done": steps_done, "iteration": iteration,
                    "epochs_done": iteration // number_of_shards,
-                   "time_in_train": time_done, "GFlops": g_flops_done}
+                   "time_in_train": time_done, "GMACs": gmacs_done}
 
         save_results_file(results, run.name, run.id)
         wandb.log(results)
 
         if loader_index == number_of_shards - 1:
             logger.info("Epoch %d done. Results: %s", iteration // number_of_shards, results)
-        # TODO: Check -ee=300 (what's happening) => Good solution?
-        # TODO: Check FLOP calculation => CRY
-        # TODO: Some kind of model saving? => Not really necessary
     run.finish()
