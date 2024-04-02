@@ -211,7 +211,8 @@ def full_training(model: PeftModel,
             end_time = time.time()
         gmacs_done += m_counter.get_total()
         if iteration == 0:
-            run.summary["macs_per_step"] = m_counter.get_total(divided=False) / len(train_loaders[0].dataset) # type: ignore
+            run.summary["macs_per_step"] = (m_counter.get_total(divided=False)
+                                            / len(train_loaders[0].dataset)) # type: ignore
         steps_done += len(train_loaders[loader_index].dataset) # type: ignore
         time_done += (end_time - start_time)
 
