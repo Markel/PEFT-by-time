@@ -9,6 +9,7 @@ from abc import ABC, abstractmethod
 from huggingface_hub import snapshot_download
 from datasets.arrow_dataset import Dataset
 from datasets.utils.logging import disable_progress_bar
+from torch import Tensor, device
 from torchmetrics import MetricCollection
 
 logger = logging.getLogger("m.dataset.base_dataset")
@@ -38,10 +39,17 @@ class BaseDataset(ABC):
         return self.__class__.__name__
 
     @abstractmethod
-    def get_eval_methods(self) -> MetricCollection:
+    def get_eval_methods(self, device_t: device) -> MetricCollection:
         """
         This method will return an evaluate a combination that contain the corresponding
         metrics to evaluate the dataset. Note that this combination may be of len(1)
+        """
+
+    @abstractmethod
+    def pre_eval_func(self, batch) -> Tensor:
+        """
+        This method will return the tensor to be used for evaluation given the outputs
+        of the model.
         """
 
 if __name__ == "__main__":

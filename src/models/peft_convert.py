@@ -12,17 +12,17 @@ from typing import cast
 from peft.mapping import get_peft_model
 from peft.peft_model import PeftModel
 from peft.tuners.lora.config import LoraConfig
-from transformers import T5Model
+from transformers import T5ForConditionalGeneration
 from ..utils.arguments import Args
 
 logger = logging.getLogger("m.models.peft_convert")
 
-def convert_to_peft(model: T5Model, args: Args) -> PeftModel:
+def convert_to_peft(model: T5ForConditionalGeneration, args: Args) -> PeftModel:
     """
     Converts the given T5 model to a PeftModel based on the specified method.
 
     Args:
-        model (T5Model): The T5 model to be converted.
+        model (T5ForConditionalGeneration): The T5 model to be converted.
         args (Args): The inline arguments of the program.
 
     Returns:
@@ -41,12 +41,15 @@ def convert_to_peft(model: T5Model, args: Args) -> PeftModel:
 
         peft_model = convert_to_lora(model,
                                      args.rank, args.alpha, args.dropout, args.target_modules)
+    elif args.method == "FT":
+        logger.debug("Method selected: Full fine-tuning. Proceeding to \"convert\" the model.")
+        peft_model = dummy_fft_convert(model)
     else:
         logger.critical("Method %s not recognized, parser should have failed.", args.method)
         raise ValueError("Method not recognized.")
     return peft_model
 
-def convert_to_lora(model: T5Model,
+def convert_to_lora(model: T5ForConditionalGeneration,
                     rank: int, alpha: int,
                     dropout: float,
                     target_modules: list[str],
@@ -55,7 +58,7 @@ def convert_to_lora(model: T5Model,
     Converts a given T5Model to a PeftModel with LoRA configuration.
 
     Args:
-        model (T5Model): The T5Model to convert.
+        model (T5ForConditionalGeneration): The T5Model to convert.
         rank (int): The rank parameter for LoRA.
         alpha (int): The alpha parameter for LoRA.
         dropout (float): The dropout rate for LoRA.
@@ -81,10 +84,32 @@ def convert_to_lora(model: T5Model,
     logger.debug("LoRA configuration created successfully.")
     peft_model = get_peft_model(model, config)
     peft_model = cast(PeftModel, peft_model)
-    logger.info("New model's (LoRA) trainable parameters: %s. Previous: %s (%s%s).",
+    logger.info("New model's (LoRA) trainable parameters: %s. Total: %s (%s%s).",
                 peft_model.get_nb_trainable_parameters()[0],
                 peft_model.get_nb_trainable_parameters()[1],
                 round(100 * peft_model.get_nb_trainable_parameters()[0]
                       / peft_model.get_nb_trainable_parameters()[1], 5),
                 "%")
     return peft_model
+
+def dummy_fft_convert(model: T5ForConditionalGeneration) -> PeftModel:
+    """
+    Dummy function to convert a model to a "Full fine-tuning" model.
+
+    Args:
+        model (T5ForConditionalGeneration): The model to convert.
+
+    Returns:
+        PeftModel: The converted model.
+
+    Notes:
+        - This function is a placeholder for future implementations.
+    """
+    logger.debug("Dummy function to convert to Full fine-tuning model.")
+    # Count number of parameters
+    logger.info("New model's (Full fine-tuning) trainable parameters: %s. Total: %s (%s%s).",
+                model.num_parameters(only_trainable=True),
+                model.num_parameters(),
+                100,
+                "%")
+    return cast(PeftModel, model)
