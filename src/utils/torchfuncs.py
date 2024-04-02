@@ -1,5 +1,6 @@
 """ This module contains utility functions for working with PyTorch tensors. """
 
+import datetime
 import json
 import logging
 import os
@@ -84,7 +85,12 @@ def get_wandb_experiment_name(args: Args) -> str:
     """
     if args.experiment_name is not None:
         return args.experiment_name
-    return f"{args.method}_{args.model}_{args.dataset}"
+
+    name = f"{args.method}_{args.model}_{args.dataset}"
+    if args.method == "LoRA":
+        name += f"_r{args.rank}"
+    name += f"_{datetime.datetime.now().strftime('%m%d')}"
+    return name
 
 def init_wandb(args: Args) -> Run:
     """
