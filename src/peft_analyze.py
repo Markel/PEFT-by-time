@@ -23,8 +23,11 @@ def main() -> None:
     logger.info("Device: %s", DEVICE)
 
     logger.debug("Loading environment variables from .env file")
-    load_dotenv()
-    logger.info("Environment variables loaded successfully")
+    try:
+        load_dotenv()
+        logger.info("Environment variables loaded successfully")
+    except Exception as e: # pylint: disable=broad-except
+        logger.error("Error loading environment variables: %s", e)
 
     model, tokenizer = download_model(ARGS.model, DEVICE)
     model   = convert_to_peft(model, ARGS)

@@ -38,6 +38,7 @@ python main.py [-h] [-b BATCH_SIZE] -d {tweet_eval} [--debug {DEBUG,INFO,WARNING
 | -lr, --learning_rate    | Learning rate of the optimizer.                                                                                                                                 | 1e-3              |
 | -m, --model             | The model to use. "small", "base", "large", "xl", "xxl" default to the corresponding T5v1.1 versions. Other models should be passed in huggingface repo format. | base              |
 | -nc, --no_color         | Disables the color from the logger.                                                                                                                             | False             |
+| -o, --optimizer         | Chooses the optimizer to use in training. Possible options are "adafactor" and "adam"                                                                           | adafactor         | 
 | -Wen, --experiment_name | Sets a custom run name for Weights&Biases                                                                                                                       |                   |
 | -Wp, --project          | The Weights&Biases project name.                                                                                                                                | peft-by-time      |
 | -Wt, --run_type         | Custom parameter for later filtering in Weights&Biases                                                                                                          | run_test          |

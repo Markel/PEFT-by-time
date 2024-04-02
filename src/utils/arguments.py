@@ -127,6 +127,9 @@ def load_dotenv():
     and sets them as environment variables using os.environ.
 
     Note: The .env file should be present in the same directory as this script.
+    Note2: The existance of this method is because the python-dotenv library is not present
+    in the target environment. It would probably be a good idea to replace this method with
+    it in the future.
 
     Example:
     If the .env file contains the following:

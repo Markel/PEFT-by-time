@@ -1,6 +1,14 @@
 # pylint: skip-file
+"""
+MACs (multiply–accumulate) counter for Pytorch models. It count the number of macs done when doing
+matrix multiplications, element-wise multiplications, fully connected layers, and bmm operations.
 
-# Credits to Chillee: https://dev-discuss.pytorch.org/t/the-ideal-pytorch-flop-counter-with-torch-dispatch/505
+It must be noted that this counter is not perfect and, furthermore, the module structure is not
+working properly with T5 models. However, the total number of MACs is still believed to be correct.
+
+Credits to Chillee: https://dev-discuss.pytorch.org/t/the-ideal-pytorch-flop-counter-with-torch-dispatch/505
+"""
+
 from collections import defaultdict
 import logging
 from numbers import Number
@@ -171,7 +179,7 @@ class MACCounterMode(TorchDispatchMode):
             divided (bool): If True, the total number of MACs is divided by 1e9 to return the result in gigaMACs (GMACs).
 
         Returns:
-            float: The total number of MACs in gigaMACs (GMACs).
+            float: The total number of MACs in gigaMACs (GMACs). If divided is False, the result is in MACs.
         """
         total = sum(self.mac_counts['Global'].values())
         if divided:

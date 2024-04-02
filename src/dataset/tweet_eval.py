@@ -4,7 +4,7 @@ Imports the TweetEval dataset, in specific the hate dataset.
 More information of the dataset can be found in the following link:
 https://huggingface.co/datasets/tweet_eval/
 
-This dataset is a Multiclass classification dataset and the following metrics are used:
+This dataset is a binary classification dataset and the following metrics are used:
 Accuracy, Recall, Precision, F1 Score.
 """
 
@@ -59,8 +59,10 @@ class TweetEvalHate(BaseDataset):
         return self.__class__.__name__
 
     def get_eval_methods(self, device_t: device) -> MetricCollection:
-        # Negative answers are considered for all cases where it doens't match the
-        # positive label. However, when computing the loss, these are independent classes.
+        """
+        This method will return an evaluate a combination that contain the corresponding
+        metrics to evaluate the dataset.
+        """
         metric_collection = MetricCollection([
             BinaryAccuracy(),
             BinaryPrecision(),
@@ -70,6 +72,13 @@ class TweetEvalHate(BaseDataset):
         return metric_collection
 
     def pre_eval_func(self, batch) -> Tensor:
+        """
+        This method will return the tensor to be used for evaluation given the outputs
+        of the model.
+
+        Negative answers are considered for all cases where it doens't match the
+        positive label. However, when computing the loss, these are independent classes.
+        """
         output_label = batch.logits.argmax(-1)
         #print(output_label)
         output_label = output_label.tolist()

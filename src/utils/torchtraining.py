@@ -166,11 +166,13 @@ def full_training(model: PeftModel,
     logger.info("Weights and Biases run: %s (%s)", run.name, run.id)
 
     (train_loaders, number_of_shards), dev_loader, test_loader = get_data_loaders(dataset, args)
+    run.summary["num_of_shards"] = number_of_shards
 
     train_params = get_trainable_params(model)
     num_trainable_params = sum(p.numel() for p in train_params)
     logger.debug("Number of trainable parameters: %d", num_trainable_params)
     run.summary["num_of_trainable_params"] = num_trainable_params
+    run.summary["total_params"] = sum(p.numel() for p in model.parameters())
 
     optimizer = get_optimizer(model, args)
 
