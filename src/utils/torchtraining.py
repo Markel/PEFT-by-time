@@ -170,6 +170,7 @@ def full_training(model: PeftModel,
     train_params = get_trainable_params(model)
     num_trainable_params = sum(p.numel() for p in train_params)
     logger.debug("Number of trainable parameters: %d", num_trainable_params)
+    run.summary["num_of_trainable_params"] = num_trainable_params
 
     optimizer = get_optimizer(model, args)
 
@@ -209,6 +210,8 @@ def full_training(model: PeftModel,
                                                                   running_loss)
             end_time = time.time()
         gmacs_done += m_counter.get_total()
+        if iteration == 0:
+            run.summary["macs_per_step"] = m_counter.get_total(divided=False) / len(train_loaders[0].dataset) # type: ignore
         steps_done += len(train_loaders[loader_index].dataset) # type: ignore
         time_done += (end_time - start_time)
 

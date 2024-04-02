@@ -163,14 +163,19 @@ class MACCounterMode(TorchDispatchMode):
 
         return PopState.apply
 
-    def get_total(self) -> float:
+    def get_total(self, divided = True) -> float:
         """
         Calculates and returns the total number of MACs (multiply–accumulate operations) for the given model.
+
+        Args:
+            divided (bool): If True, the total number of MACs is divided by 1e9 to return the result in gigaMACs (GMACs).
 
         Returns:
             float: The total number of MACs in gigaMACs (GMACs).
         """
-        total = sum(self.mac_counts['Global'].values())/1e9
+        total = sum(self.mac_counts['Global'].values())
+        if divided:
+            total /= 1e9
         return total
 
     def __enter__(self):
@@ -179,13 +184,13 @@ class MACCounterMode(TorchDispatchMode):
 
     def __exit__(self, *args):
         if self.show:
-            text = ""
-            text += f"Total: {sum(self.mac_counts['Global'].values())/1e9 } GMACS\n"
+            logger.debug(f"Total: {sum(self.mac_counts['Global'].values())/1e9 } GMACS")
             for mod in self.mac_counts.keys():
-                text += f"Module: {mod}\n"
+                text = ""
+                text += f"Module: {mod}"
                 for k,v in self.mac_counts[mod].items():
-                    text += f"{k}: {v/1e9} GMACS\n"
-            logger.debug(text)
+                    text += f"\n{k}: {v/1e9} GMACS"
+                logger.debug(text)
         super().__exit__(*args)
 
     def __torch_dispatch__(self, func, types, args=(), kwargs=None):
