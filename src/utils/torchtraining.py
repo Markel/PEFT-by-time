@@ -199,7 +199,7 @@ def full_training(model: PeftModel,
         #* TRAINING
         logger.debug("Starting to train, iteration %d", iteration)
 
-        m_counter = MACCounterMode(model)
+        m_counter = MACCounterMode(model, show = iteration==0)
         with m_counter:
             start_time = time.time()
             model, running_loss, train_tests = train_entire_batch(model, tokenizer,

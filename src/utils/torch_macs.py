@@ -2,6 +2,7 @@
 
 # Credits to Chillee: https://dev-discuss.pytorch.org/t/the-ideal-pytorch-flop-counter-with-torch-dispatch/505
 from collections import defaultdict
+import logging
 from numbers import Number
 from typing import Any, List
 
@@ -9,6 +10,8 @@ import torch
 import torch.nn as nn
 from torch.utils._python_dispatch import TorchDispatchMode
 from torch.utils._pytree import tree_flatten, tree_map
+
+logger = logging.getLogger("m.utils.torch_macs")
 
 aten = torch.ops.aten
 
@@ -90,10 +93,11 @@ def normalize_tuple(x):
     return x
 
 class MACCounterMode(TorchDispatchMode):
-    def __init__(self, module = None, debug=False):
+    def __init__(self, module = None, debug=False, show=False):
         self.mac_counts = defaultdict(lambda: defaultdict(int))
         self.parents = ['Global']
         self.debug = debug
+        self.show = show
         list_of_modules = [] if module is None else [("", module)]
         while len(list_of_modules) > 0:
             name, module = list_of_modules.pop()
@@ -174,12 +178,14 @@ class MACCounterMode(TorchDispatchMode):
         super().__enter__()
 
     def __exit__(self, *args):
-        print(f"Total: {sum(self.mac_counts['Global'].values())/1e9 } GMACS")
-        for mod in self.mac_counts.keys():
-            print(f"Module: ", mod)
-            for k,v in self.mac_counts[mod].items():
-                print(f"{k}: {v/1e9} GMACS")
-            print()
+        if self.show:
+            text = ""
+            text += f"Total: {sum(self.mac_counts['Global'].values())/1e9 } GMACS\n"
+            for mod in self.mac_counts.keys():
+                text += f"Module: {mod}\n"
+                for k,v in self.mac_counts[mod].items():
+                    text += f"{k}: {v/1e9} GMACS\n"
+            logger.debug(text)
         super().__exit__(*args)
 
     def __torch_dispatch__(self, func, types, args=(), kwargs=None):
