@@ -38,8 +38,10 @@ class TweetEvalHate(BaseDataset):
         dataset_dict = cast(DatasetDict, dataset_dict)
         logger.debug("DatasetDict loaded successfully.")
 
-        self.pos = tokenizer.encode('positive')
-        self.neg = tokenizer.encode('negative')
+        self.neg = tokenizer.encode('Hate speech is not present in the previous sentences.')
+        self.pos = tokenizer.encode('Hate speech is present in the previous sentences.',
+                                    padding="max_length", max_length=len(self.neg))
+
         dataset_dict = dataset_dict.map(
             lambda x: {"token_labels": self.pos if x["label"] == 1 else self.neg}
         )
@@ -82,7 +84,9 @@ class TweetEvalHate(BaseDataset):
         output_label = batch.logits.argmax(-1)
         #print(output_label)
         output_label = output_label.tolist()
-        output_label = [1 if x == self.pos else 0 for x in output_label]
+        #print(self.neg, "\n", output_label[0], "\n")
+        output_label = [0 if x == self.neg else 1 for x in output_label]
+        # Note for other datasets: After end tokens should not be checked, model doesn't learn it.
         output_label = torch.tensor(output_label).to(batch.logits.get_device())
         return output_label
 
