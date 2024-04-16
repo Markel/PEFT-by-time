@@ -1,0 +1,140 @@
+<mxfile host="app.diagrams.net" modified="2024-04-16T19:46:29.862Z" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:124.0) Gecko/20100101 Firefox/124.0" etag="ztW26b23b7eDVxvi_hgy" version="21.3.6" type="device">
+  <diagram name="1-orria" id="MZ28IeVmdone7hrxnOuK">
+    <mxGraphModel dx="1400" dy="755" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1169" pageHeight="827" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="rMn6LhZq55prS91LavoV-1" value="orig_model.py" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;fillColor=#ffcccc;strokeColor=#36393d;" vertex="1" parent="1">
+          <mxGeometry x="221" y="237.5" width="160" height="60" as="geometry">
+            <mxRectangle x="330" y="230" width="80" height="50" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rMn6LhZq55prS91LavoV-2" value="&lt;div align=&quot;center&quot;&gt;Download T5 model&lt;br&gt;&lt;/div&gt;" style="align=center;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" vertex="1" parent="rMn6LhZq55prS91LavoV-1">
+          <mxGeometry y="30" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="rMn6LhZq55prS91LavoV-6" value="peft_convert.py" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;fillColor=#ffcccc;strokeColor=#36393d;" vertex="1" parent="1">
+          <mxGeometry x="420" y="227.5" width="160" height="70" as="geometry">
+            <mxRectangle x="330" y="230" width="80" height="50" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rMn6LhZq55prS91LavoV-7" value="Add corresponding &lt;br&gt;PEFT layers" style="align=center;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" vertex="1" parent="rMn6LhZq55prS91LavoV-6">
+          <mxGeometry y="30" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="rMn6LhZq55prS91LavoV-8" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0;exitDx=0;exitDy=0;entryX=0;entryY=0.25;entryDx=0;entryDy=0;edgeStyle=entityRelationEdgeStyle;" edge="1" parent="1" source="rMn6LhZq55prS91LavoV-2" target="rMn6LhZq55prS91LavoV-7">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rMn6LhZq55prS91LavoV-21" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1.006;exitY=0.392;exitDx=0;exitDy=0;entryX=0.006;entryY=0.392;entryDx=0;entryDy=0;entryPerimeter=0;exitPerimeter=0;" edge="1" parent="1" source="rMn6LhZq55prS91LavoV-12" target="rMn6LhZq55prS91LavoV-19">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rMn6LhZq55prS91LavoV-11" value="[dataset].py" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;fillColor=#ffff88;strokeColor=#36393d;" vertex="1" parent="1">
+          <mxGeometry x="210" y="10" width="171" height="90" as="geometry">
+            <mxRectangle x="330" y="230" width="80" height="50" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rMn6LhZq55prS91LavoV-12" value="Initialize and tokenize dataset,&lt;br&gt;provide evaluation metrics&lt;br&gt;&amp;amp; complete abstract methods" style="align=center;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" vertex="1" parent="rMn6LhZq55prS91LavoV-11">
+          <mxGeometry y="30" width="171" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="rMn6LhZq55prS91LavoV-20" style="rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.408;entryDx=0;entryDy=0;elbow=vertical;entryPerimeter=0;" edge="1" parent="1" source="rMn6LhZq55prS91LavoV-13" target="rMn6LhZq55prS91LavoV-12">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rMn6LhZq55prS91LavoV-13" value="dataset_downloader.py" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;fillColor=#ffff88;strokeColor=#36393d;" vertex="1" parent="1">
+          <mxGeometry x="10" y="30" width="160" height="70" as="geometry">
+            <mxRectangle x="330" y="230" width="80" height="50" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rMn6LhZq55prS91LavoV-14" value="Call corresponding&lt;br&gt;dataset class" style="align=center;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" vertex="1" parent="rMn6LhZq55prS91LavoV-13">
+          <mxGeometry y="30" width="160" height="40" as="geometry" />
+        </mxCell>
+        <mxCell id="rMn6LhZq55prS91LavoV-18" value="base_dataset.py" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;fillColor=#ffff88;strokeColor=#36393d;" vertex="1" parent="1">
+          <mxGeometry x="420" y="10" width="160" height="90" as="geometry">
+            <mxRectangle x="330" y="230" width="80" height="50" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rMn6LhZq55prS91LavoV-19" value="Download dataset and&lt;br&gt;provide dataset&lt;br&gt;abstraction layer" style="align=center;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" vertex="1" parent="rMn6LhZq55prS91LavoV-18">
+          <mxGeometry y="30" width="160" height="60" as="geometry" />
+        </mxCell>
+        <mxCell id="rMn6LhZq55prS91LavoV-36" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0.006;entryY=0.159;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="rMn6LhZq55prS91LavoV-22" target="rMn6LhZq55prS91LavoV-31">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rMn6LhZq55prS91LavoV-22" value="Training" style="swimlane;whiteSpace=wrap;html=1;" vertex="1" parent="1">
+          <mxGeometry x="670" y="57.5" width="200" height="207.5" as="geometry">
+            <mxRectangle x="680" y="260" width="90" height="30" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rMn6LhZq55prS91LavoV-23" value="torchtraining.py" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;fillColor=#cdeb8b;strokeColor=#36393d;" vertex="1" parent="rMn6LhZq55prS91LavoV-22">
+          <mxGeometry x="20" y="37.5" width="160" height="60" as="geometry">
+            <mxRectangle x="330" y="230" width="80" height="50" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rMn6LhZq55prS91LavoV-24" value="Train x steps" style="align=center;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" vertex="1" parent="rMn6LhZq55prS91LavoV-23">
+          <mxGeometry y="30" width="160" height="30" as="geometry" />
+        </mxCell>
+        <mxCell id="rMn6LhZq55prS91LavoV-25" value="torch_macs.py" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;fillColor=#cdeb8b;strokeColor=#36393d;" vertex="1" parent="rMn6LhZq55prS91LavoV-22">
+          <mxGeometry x="20" y="117.5" width="160" height="72.5" as="geometry">
+            <mxRectangle x="330" y="230" width="80" height="50" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rMn6LhZq55prS91LavoV-26" value="Count number of&lt;br&gt;MACs computed" style="align=center;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" vertex="1" parent="rMn6LhZq55prS91LavoV-25">
+          <mxGeometry y="30" width="160" height="42.5" as="geometry" />
+        </mxCell>
+        <mxCell id="rMn6LhZq55prS91LavoV-28" value="torchtraining.py" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;fillColor=#cdeb8b;strokeColor=#36393d;" vertex="1" parent="1">
+          <mxGeometry x="1109" y="125" width="160" height="72.5" as="geometry">
+            <mxRectangle x="330" y="230" width="80" height="50" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rMn6LhZq55prS91LavoV-29" value="Send information to&lt;br&gt;W&amp;amp;B and save in JSON" style="align=center;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" vertex="1" parent="rMn6LhZq55prS91LavoV-28">
+          <mxGeometry y="30" width="160" height="42.5" as="geometry" />
+        </mxCell>
+        <mxCell id="rMn6LhZq55prS91LavoV-37" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.17;entryDx=0;entryDy=0;entryPerimeter=0;" edge="1" parent="1" source="rMn6LhZq55prS91LavoV-30" target="rMn6LhZq55prS91LavoV-29">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rMn6LhZq55prS91LavoV-30" value="torchtraining.py" style="swimlane;childLayout=stackLayout;horizontal=1;startSize=30;horizontalStack=0;rounded=1;fontSize=14;fontStyle=0;strokeWidth=2;resizeParent=0;resizeLast=1;shadow=0;dashed=0;align=center;arcSize=4;whiteSpace=wrap;html=1;fillColor=#cdeb8b;strokeColor=#36393d;" vertex="1" parent="1">
+          <mxGeometry x="910" y="125" width="160" height="72.5" as="geometry">
+            <mxRectangle x="330" y="230" width="80" height="50" as="alternateBounds" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rMn6LhZq55prS91LavoV-31" value="Evaluate model in dev and&lt;br&gt;test partitions" style="align=center;strokeColor=none;fillColor=none;spacingLeft=4;fontSize=12;verticalAlign=top;resizable=0;rotatable=0;part=1;html=1;" vertex="1" parent="rMn6LhZq55prS91LavoV-30">
+          <mxGeometry y="30" width="160" height="42.5" as="geometry" />
+        </mxCell>
+        <mxCell id="rMn6LhZq55prS91LavoV-32" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="rMn6LhZq55prS91LavoV-19" target="rMn6LhZq55prS91LavoV-22">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rMn6LhZq55prS91LavoV-35" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;exitX=1;exitY=0.5;exitDx=0;exitDy=0;entryX=0;entryY=0.5;entryDx=0;entryDy=0;" edge="1" parent="1" source="rMn6LhZq55prS91LavoV-7" target="rMn6LhZq55prS91LavoV-22">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="rMn6LhZq55prS91LavoV-38" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;entryX=0.5;entryY=1;entryDx=0;entryDy=0;" edge="1" parent="1" source="rMn6LhZq55prS91LavoV-29" target="rMn6LhZq55prS91LavoV-22">
+          <mxGeometry relative="1" as="geometry">
+            <Array as="points">
+              <mxPoint x="1190" y="307.5" />
+              <mxPoint x="770" y="307.5" />
+            </Array>
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="rMn6LhZq55prS91LavoV-42" value="" style="group" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="20" y="220" width="84" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="rMn6LhZq55prS91LavoV-39" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffcccc;strokeColor=#36393d;" vertex="1" parent="rMn6LhZq55prS91LavoV-42">
+          <mxGeometry width="20" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="rMn6LhZq55prS91LavoV-40" value="models" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="rMn6LhZq55prS91LavoV-42">
+          <mxGeometry x="24" width="60" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="rMn6LhZq55prS91LavoV-43" value="" style="group" vertex="1" connectable="0" parent="1">
+          <mxGeometry x="20" y="244" width="84" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="rMn6LhZq55prS91LavoV-44" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#ffff88;strokeColor=#36393d;" vertex="1" parent="rMn6LhZq55prS91LavoV-43">
+          <mxGeometry width="20" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="rMn6LhZq55prS91LavoV-45" value="dataset" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="rMn6LhZq55prS91LavoV-43">
+          <mxGeometry x="24" width="60" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="rMn6LhZq55prS91LavoV-46" value="" style="rounded=0;whiteSpace=wrap;html=1;fillColor=#cdeb8b;strokeColor=#36393d;" vertex="1" parent="1">
+          <mxGeometry x="20" y="270" width="20" height="20" as="geometry" />
+        </mxCell>
+        <mxCell id="rMn6LhZq55prS91LavoV-47" value="utils" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+          <mxGeometry x="44" y="270" width="60" height="20" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
