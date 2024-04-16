@@ -80,4 +80,4 @@ WANDB_MODE=disabled
 ```
 
 ## Architecture
-![Diagram of the program flow](https://raw.githubusercontent.com/Markel/PEFT-by-time/main/assets/PEFT.drawio.png)
+![Diagram of the program flow](https://github.com/Markel/PEFT-by-time/blob/main/assets/PEFT.drawio.png?raw=true)
