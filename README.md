@@ -66,15 +66,18 @@ python main.py ... LoRA [-h] [-r RANK] [-a ALPHA] [-d DROPOUT] [-t TARGET_MODULE
 python main.py -d=tweet_eval -e=2 -ee=300 --debug=DEBUG LoRA
 ```
 
-## Linting
+### Linting
 ```bash
 pylint ./
 ```
 
-## Disable reporting to W&B
+### Disable reporting to W&B
 
 You may disable Weigths & Bias reporting (it will be treated as a dummy run) creating a .env file and setting
 
 ```
 WANDB_MODE=disabled
 ```
+
+## Architecture
+![Diagram of the program flow](https://raw.githubusercontent.com/Markel/PEFT-by-time/main/assets/PEFT.drawio.png)
