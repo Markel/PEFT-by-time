@@ -1,7 +1,7 @@
 """
 This module contains the abstract class for all datasets, so we can do type checking effectively.
 
-The dataset should have a train, dev and test attribute, which each split.
+The dataset should have a train, dev and test attribute, with each split.
 Each dataset should have the following properties:
 input_ids      = The input ids of the text inputs.
 attention_mask = The attention mask of the text inputs.
