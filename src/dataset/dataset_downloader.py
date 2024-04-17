@@ -32,6 +32,6 @@ def download_dataset(dataset_name: Literal["tweet_eval", "ag_news"],
     """
     if dataset_name == "tweet_eval":
         return TweetEvalHate(tokenizer, device_t)
-    elif dataset_name == "ag_news":
+    if dataset_name == "ag_news":
         return AGNews(tokenizer, device_t)
     raise ValueError(f"Dataset {dataset_name} not found.")

@@ -1,5 +1,5 @@
 """
-
+This dataset is a collection of news, divided in 4 topics: World, Sports, Business and Sci/Tech.
 """
 
 import logging
@@ -52,6 +52,7 @@ class AGNews(BaseDataset):
         )
 
         # pylint: disable=consider-using-enumerate
+        # Remove trailing padding of each possible answers for later comparison.
         for i in range(len(self.tokenized_results)):
             while self.tokenized_results[i][-1] == 0:
                 self.tokenized_results[i] = self.tokenized_results[i][:-1]
@@ -98,14 +99,13 @@ class AGNews(BaseDataset):
         def get_label(x):
             if x[:len(self.tokenized_results[0])] == self.tokenized_results[0]:
                 return 0
-            elif x[:len(self.tokenized_results[1])] == self.tokenized_results[1]:
+            if x[:len(self.tokenized_results[1])] == self.tokenized_results[1]:
                 return 1
-            elif x[:len(self.tokenized_results[2])] == self.tokenized_results[2]:
+            if x[:len(self.tokenized_results[2])] == self.tokenized_results[2]:
                 return 2
-            elif x[:len(self.tokenized_results[3])] == self.tokenized_results[3]:
+            if x[:len(self.tokenized_results[3])] == self.tokenized_results[3]:
                 return 3
-            else:
-                return 0
+            return 0
         output_label = [get_label(x) for x in output_label]
         output_label = torch.tensor(output_label).to(batch.logits.get_device())
         return output_label
