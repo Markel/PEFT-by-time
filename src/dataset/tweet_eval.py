@@ -4,7 +4,7 @@ Imports the TweetEval dataset, in specific the hate dataset.
 More information of the dataset can be found in the following link:
 https://huggingface.co/datasets/tweet_eval/
 
-This dataset is a binary classification dataset and the following metrics are used:
+This dataset is a Binary classification dataset and the following metrics are used:
 Accuracy, Recall, Precision, F1 Score.
 """
 
@@ -15,8 +15,8 @@ from datasets import DatasetDict, load_dataset
 from torch import Tensor, device
 import torch
 from torchmetrics import MetricCollection
-from torchmetrics.classification import (BinaryAccuracy, BinaryF1Score,
-                                         BinaryPrecision, BinaryRecall)
+from torchmetrics.classification import (MulticlassAccuracy, MulticlassF1Score,
+                                         MulticlassPrecision, MulticlassRecall)
 from transformers import T5TokenizerFast
 
 from .base_dataset import BaseDataset
@@ -66,10 +66,10 @@ class TweetEvalHate(BaseDataset):
         metrics to evaluate the dataset.
         """
         metric_collection = MetricCollection([
-            BinaryAccuracy(),
-            BinaryPrecision(),
-            BinaryRecall(),
-            BinaryF1Score()
+            MulticlassAccuracy(num_classes=2, average="macro"),
+            MulticlassPrecision(num_classes=2, average="macro"),
+            MulticlassRecall(num_classes=2, average="macro"),
+            MulticlassF1Score(num_classes=2, average="macro")
         ]).to(device_t)
         return metric_collection
 
