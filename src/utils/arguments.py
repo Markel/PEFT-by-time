@@ -15,7 +15,7 @@ class Args(argparse.Namespace):
     # The batch size to use in the training.
     batch_size: int
     # Name of the dataset to use.
-    dataset: Literal["tweet_eval", "ag_news"]
+    dataset: Literal["tweet_eval", "ag_news", "race", "commonsense_qa"]
     # The level for the logging https://docs.python.org/3/library/logging.html#logging-levels
     debug: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
     # Number of epochs to train the model. Default to 10.
@@ -71,7 +71,7 @@ def parse_args() -> Args:
     parser.add_argument("-b", "--batch_size", type=int, default=8,
                         help="The batch size to use in the training.")
     parser.add_argument("-d", "--dataset", type=str, required=True, help="The dataset to use.",
-                        choices=["tweet_eval", "ag_news"])
+                        choices=["tweet_eval", "ag_news", "race", "commonsense_qa"])
     parser.add_argument("--debug", type=str, default="INFO", help="The log level to use.",
                         choices=["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"])
     parser.add_argument("-e", "--epochs", type=int, default=10,

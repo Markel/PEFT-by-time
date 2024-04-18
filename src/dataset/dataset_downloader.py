@@ -5,16 +5,16 @@ Defines a function to download the correct dataset.
 
 from typing import Literal
 
-from transformers import T5TokenizerFast
 from torch import device
+from transformers import T5TokenizerFast
 
 from .ag_news import AGNews
-
 from .base_dataset import BaseDataset
+from .commonsense_qa import CommonSenseQA
 from .tweet_eval import TweetEvalHate
 
 
-def download_dataset(dataset_name: Literal["tweet_eval", "ag_news"],
+def download_dataset(dataset_name: Literal["tweet_eval", "ag_news", "race", "commonsense_qa"],
                      tokenizer: T5TokenizerFast,
                      device_t: device
                     ) -> BaseDataset:
@@ -34,4 +34,6 @@ def download_dataset(dataset_name: Literal["tweet_eval", "ag_news"],
         return TweetEvalHate(tokenizer, device_t)
     if dataset_name == "ag_news":
         return AGNews(tokenizer, device_t)
+    if dataset_name == "commonsense_qa":
+        return CommonSenseQA(tokenizer, device_t)
     raise ValueError(f"Dataset {dataset_name} not found.")
