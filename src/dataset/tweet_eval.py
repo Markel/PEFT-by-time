@@ -4,7 +4,7 @@ Imports the TweetEval dataset, in specific the hate dataset.
 More information of the dataset can be found in the following link:
 https://huggingface.co/datasets/tweet_eval/
 
-This dataset is a binary classification dataset and the following metrics are used:
+This dataset is a Binary classification dataset and the following metrics are used:
 Accuracy, Recall, Precision, F1 Score.
 """
 
@@ -15,8 +15,8 @@ from datasets import DatasetDict, load_dataset
 from torch import Tensor, device
 import torch
 from torchmetrics import MetricCollection
-from torchmetrics.classification import (BinaryAccuracy, BinaryF1Score,
-                                         BinaryPrecision, BinaryRecall)
+from torchmetrics.classification import (MulticlassAccuracy, MulticlassF1Score,
+                                         MulticlassPrecision, MulticlassRecall)
 from transformers import T5TokenizerFast
 
 from .base_dataset import BaseDataset
@@ -38,8 +38,10 @@ class TweetEvalHate(BaseDataset):
         dataset_dict = cast(DatasetDict, dataset_dict)
         logger.debug("DatasetDict loaded successfully.")
 
-        self.pos = tokenizer.encode('positive')
-        self.neg = tokenizer.encode('negative')
+        self.neg = tokenizer.encode('Hate speech is not present in the previous sentences.')
+        self.pos = tokenizer.encode('Hate speech is present in the previous sentences.',
+                                    padding="max_length", max_length=len(self.neg))
+
         dataset_dict = dataset_dict.map(
             lambda x: {"token_labels": self.pos if x["label"] == 1 else self.neg}
         )
@@ -64,10 +66,10 @@ class TweetEvalHate(BaseDataset):
         metrics to evaluate the dataset.
         """
         metric_collection = MetricCollection([
-            BinaryAccuracy(),
-            BinaryPrecision(),
-            BinaryRecall(),
-            BinaryF1Score()
+            MulticlassAccuracy(num_classes=2, average="macro"),
+            MulticlassPrecision(num_classes=2, average="macro"),
+            MulticlassRecall(num_classes=2, average="macro"),
+            MulticlassF1Score(num_classes=2, average="macro")
         ]).to(device_t)
         return metric_collection
 
@@ -82,7 +84,9 @@ class TweetEvalHate(BaseDataset):
         output_label = batch.logits.argmax(-1)
         #print(output_label)
         output_label = output_label.tolist()
-        output_label = [1 if x == self.pos else 0 for x in output_label]
+        #print(self.neg, "\n", output_label[0], "\n")
+        output_label = [0 if x == self.neg else 1 for x in output_label]
+        # Note for other datasets: After end tokens should not be checked, model doesn't learn it.
         output_label = torch.tensor(output_label).to(batch.logits.get_device())
         return output_label
 
