@@ -19,7 +19,7 @@ import wandb
 from ..dataset.base_dataset import BaseDataset
 from .arguments import Args
 from .torch_macs import MACCounterMode
-from .torchfuncs import (get_trainable_params, get_optimizer, init_wandb,
+from .torchfuncs import (get_results_filename, get_trainable_params, get_optimizer, init_wandb,
                          save_results_file)
 
 logger = logging.getLogger("m.utils.torchtraining")
@@ -251,4 +251,11 @@ def full_training(model: PeftModel,
 
         if loader_index == number_of_shards - 1:
             logger.info("Epoch %d done. Results: %s", iteration // number_of_shards, results)
+
+    logger.info("Training finished, procedding to end the run.")
+    logger.debug("Logging results file to W&B")
+    artifact = wandb.Artifact(name="results_file", type="results")
+    artifact.add_file(local_path=get_results_filename(run.name, run.id))
+    run.log_artifact(artifact)
+    logger.debug("Results file logged to W&B. Ending run.")
     run.finish()

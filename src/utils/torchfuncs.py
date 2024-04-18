@@ -35,6 +35,19 @@ def get_trainable_params(model: PeftModel) -> list[torch.Tensor]:
     """
     return [p for p in model.parameters() if p.requires_grad]
 
+def get_results_filename(run_name: str, run_id: str) -> str:
+    """
+    Returns the filename for the results file.
+
+    Args:
+        run_name (str): The name of the run.
+        run_id (str): The ID of the run.
+
+    Returns:
+        str: The filename for the results file.
+    """
+    return f"results/{run_name}-{run_id}.json"
+
 def load_results_file(run_name: str, run_id: str) -> list:
     """
     Load the contents of a results file in JSON format.
@@ -47,7 +60,7 @@ def load_results_file(run_name: str, run_id: str) -> list:
         or an empty list if the file is not found.
     """
     try:
-        filename = f"results/{run_name}-{run_id}.json"
+        filename = get_results_filename(run_name, run_id)
         with open(filename, 'r', encoding='utf-8') as file:
             return json.load(file)
     except FileNotFoundError:
@@ -69,7 +82,7 @@ def save_results_file(dictionary_list: dict, run_name: str, run_id: str):
         os.makedirs("results")
     existing_dicts = load_results_file(run_name, run_id)
     existing_dicts.append(dictionary_list)
-    filename = f"results/{run_name}-{run_id}.json"
+    filename = get_results_filename(run_name, run_id)
     with open(filename, 'w', encoding='utf-8') as file:
         json.dump(existing_dicts, file, indent=2)
 
