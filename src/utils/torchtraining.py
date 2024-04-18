@@ -243,7 +243,7 @@ def full_training(model: PeftModel,
                    "test_loss": test_loss,
                    # "learning_rate": optimizer.param_groups[0]["lr"],
                    "steps_done": steps_done, "iteration": iteration,
-                   "epochs_done": iteration // number_of_shards,
+                   "epochs_done": (iteration + 1) // number_of_shards,
                    "time_in_train": time_done, "GMACs": gmacs_done}
 
         save_results_file(results, run.name, run.id)
