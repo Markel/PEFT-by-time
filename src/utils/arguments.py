@@ -34,6 +34,8 @@ class Args(argparse.Namespace):
     no_color: bool
     # The optimizer to use. Defaults to "adafactor".
     optimizer: Literal["adafactor", "adam"]
+    # Skips the initial dev and test evaluation before training. Defaults to False.
+    skip_initial_eval: bool
 
     ##* W&B parameters
     # Custom name for the experiment.
@@ -88,6 +90,9 @@ def parse_args() -> Args:
     parser.add_argument("-o", "--optimizer", type=str, default="adafactor",
                         choices=["adafactor", "adam"],
                         help="The optimizer to use. Defaults to \"adafactor\".")
+    parser.add_argument("-se", "--skip_initial_eval", action="store_true", default=False,
+                        help="Skips the initial dev and test evaluation before training. \
+                        Defaults to False.")
 
     #** W&B
     parser.add_argument("-Wen", "--experiment_name", type=str,
