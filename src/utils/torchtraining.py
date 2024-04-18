@@ -189,6 +189,29 @@ def full_training(model: PeftModel,
 
     running_loss: float = 0.0
 
+    if not args.skip_initial_eval:
+        logger.info("Starting initial evaluation")
+        logger.debug("Starting to evaluate dev")
+        dev_tests, dev_loss = test_batch(model, tokenizer, dev_loader,
+                                         dev_tests, dataset.pre_eval_func)
+        dev_results = dev_tests.compute()
+        dev_tests.reset()
+        dev_results = {f"dev_{key}": value.item() for key, value in dev_results.items()}
+
+        logger.debug("Starting to evaluate test")
+        test_tests, test_loss = test_batch(model, tokenizer, test_loader,
+                                           test_tests, dataset.pre_eval_func)
+        test_results = test_tests.compute()
+        test_tests.reset()
+        test_results = {f"test_{key}": value.item() for key, value in test_results.items()}
+
+        results = {**dev_results, **test_results, "dev_loss": dev_loss, "test_loss": test_loss,
+                   "steps_done": 0, "iteration": -1, "epochs_done": 0, "time_in_train": 0.0,
+                   "GMACs": 0.0}
+        wandb.log(results)
+        save_results_file(results, run.name, run.id)
+        logger.info("Initial evaluation done. Results: %s", results)
+
     #* WORKING LOOP
     for iteration in range(iters_need):
         loader_index = iteration % number_of_shards
