@@ -1,5 +1,13 @@
 """
 This module contains the abstract class for all datasets, so we can do type checking effectively.
+
+The dataset should have a train, dev and test attribute, with each split.
+Each dataset should have the following properties:
+input_ids      = The input ids of the text inputs.
+attention_mask = The attention mask of the text inputs.
+labels         = The number of the results, for example: 0 non-hate, 1 hate.
+token_labels   = A phrase that represents the label. This is what the model will predict.
+                 For example: "The topic of the article is: World"
 """
 
 import logging
