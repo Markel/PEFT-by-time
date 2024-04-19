@@ -1,11 +1,26 @@
 """
-Imports the TweetEval dataset, in specific the hate dataset.
+TweetEval-Hate is sourced from the SemEval 2019 Task 5, which focuses on the detection of hate speech against immigrants and women in messages extracted from Twitter. The tweets extracted from Twitter are both English and Spanish. For this project only the English tweets were used, as the baseline T5 model was trained on English texts.
 
-More information of the dataset can be found in the following link:
+The tweets were manually annotated to classify instances of hate speech targeting immigrants and women. Each instance in the dataset contains the text of the tweet and the corresponding label (0 for no hate speech, 1 for hate speech).
+
+The dataset is structured into training (9,000 instances), validation (1,000 instances), and test (2,970 instances) sets. The dataset exhibits a relatively balanced distribution, having, on average across the different sets, a 58% of non hateful tweets and a 42% of hateful tweets.
+
+Examples of annotated instances include:
+
+```
+text: your girlfriend lookin at me like a groupie in this bitch!
+label: 1
+
+text: Coding program in NY seeks to open tech career doors for immigrant girls
+label: 0
+```
+
+The training task consists on teaching the T5 model to automatically classify tweets into hate speech and non-hate speech categories, accounting for the different nuanced forms of discriminatory language present in the dataset.
+
+Evaluation of model performance utilizes recommended metrics by the original authors, including macro-accuracy, macro-recall, macro-precision, and macro-F1 Score.
+
+For more information and access to the dataset refer to the Hugging Face's website:
 https://huggingface.co/datasets/tweet_eval/
-
-This dataset is a Binary classification dataset and the following metrics are used:
-Accuracy, Recall, Precision, F1 Score.
 """
 
 import logging
