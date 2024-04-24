@@ -13,6 +13,7 @@ token_labels   = A phrase that represents the label. This is what the model will
 import logging
 import os
 from abc import ABC, abstractmethod
+from typing import Union
 
 from huggingface_hub import snapshot_download
 from datasets.arrow_dataset import Dataset
@@ -35,7 +36,7 @@ class BaseDataset(ABC):
     def __init__(self, dataset_name: str) -> None:
         super().__init__()
 
-        disable_progress_bar()
+        disable_progress_bar() # Doesn't really work...
         # Download the dataset if not available
         local_dir = "./downloads/datasets/"+dataset_name
         if not os.path.isdir(local_dir):
@@ -54,7 +55,7 @@ class BaseDataset(ABC):
         """
 
     @abstractmethod
-    def pre_eval_func(self, batch) -> Tensor:
+    def pre_eval_func(self, batch) -> Union[Tensor, list[str]]:
         """
         This method will return the tensor to be used for evaluation given the outputs
         of the model.

@@ -11,6 +11,7 @@ from transformers import T5TokenizerFast
 from .ag_news import AGNews
 from .base_dataset import BaseDataset
 from .commonsense_qa import CommonSenseQA
+from .race import Race
 from .tweet_eval import TweetEvalHate
 
 
@@ -36,4 +37,6 @@ def download_dataset(dataset_name: Literal["tweet_eval", "ag_news", "race", "com
         return AGNews(tokenizer, device_t)
     if dataset_name == "commonsense_qa":
         return CommonSenseQA(tokenizer, device_t)
+    if dataset_name == "race":
+        return Race(tokenizer, device_t)
     raise ValueError(f"Dataset {dataset_name} not found.")
