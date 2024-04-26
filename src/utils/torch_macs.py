@@ -186,8 +186,8 @@ class MACCounterMode(TorchDispatchMode):
             total /= 1e9
         return total
 
-    def change_debug(self, debug):
-        self.debug = debug
+    def change_show(self, show: bool):
+        self.show = show
 
     def __enter__(self):
         self.mac_counts.clear()

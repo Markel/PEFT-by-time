@@ -239,7 +239,7 @@ def full_training(model: PeftModel,
         if iteration == 0:
             run.summary["macs_per_step"] = (m_counter.get_total(divided=False)
                                             / len(train_loaders[0].dataset)) # type: ignore
-            m_counter.change_debug(False)
+            m_counter.change_show(False)
 
         steps_done += len(train_loaders[loader_index].dataset) # type: ignore
         time_done += (end_time - start_time)
