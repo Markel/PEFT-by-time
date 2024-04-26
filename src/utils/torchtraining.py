@@ -96,7 +96,7 @@ def train_entire_batch(model: PeftModel,
         loss = outputs.loss
         loss.backward()
         running_loss += loss.item()
-        output_labels = pre_eval_func(outputs, labels)
+        output_labels = pre_eval_func(outputs, token_labels)
         #print("Ou", output_labels, "LA", labels)
         eval_tests.update(output_labels, labels)
         optimizer.step()
@@ -136,7 +136,7 @@ def test_batch(model: PeftModel,
             outputs = model(input_ids=input_ids, attention_mask=attention_mask, labels=token_labels)
             loss = outputs.loss
             total_loss += loss.item()
-        output_labels = pre_eval_func(outputs, labels)
+        output_labels = pre_eval_func(outputs, token_labels)
         eval_tests.update(output_labels, labels)
     total_loss /= len(data.dataset) # type: ignore
     return eval_tests, total_loss
