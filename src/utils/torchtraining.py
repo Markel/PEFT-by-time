@@ -212,6 +212,8 @@ def full_training(model: PeftModel,
         save_results_file(results, run.name, run.id)
         logger.info("Initial evaluation done. Results: %s", results)
 
+    m_counter = MACCounterMode(model, show = True)
+
     #* WORKING LOOP
     for iteration in range(iters_need):
         loader_index = iteration % number_of_shards
@@ -225,7 +227,6 @@ def full_training(model: PeftModel,
         #* TRAINING
         logger.debug("Starting to train, iteration %d", iteration)
 
-        m_counter = MACCounterMode(model, show = iteration==0)
         with m_counter:
             start_time = time.time()
             model, running_loss, train_tests = train_entire_batch(model, tokenizer,
@@ -238,6 +239,8 @@ def full_training(model: PeftModel,
         if iteration == 0:
             run.summary["macs_per_step"] = (m_counter.get_total(divided=False)
                                             / len(train_loaders[0].dataset)) # type: ignore
+            m_counter.change_debug(False)
+
         steps_done += len(train_loaders[loader_index].dataset) # type: ignore
         time_done += (end_time - start_time)
 
