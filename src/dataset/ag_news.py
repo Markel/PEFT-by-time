@@ -1,5 +1,35 @@
+# pylint: disable=anomalous-backslash-in-string
 """
-This dataset is a collection of news, divided in 4 topics: World, Sports, Business and Sci/Tech.
+The AG News dataset comprises of articles collected from various sources over the course of a year.
+Constructed by Antonio Gulli, uses have been varied, from clustering to search ranking.
+
+In this project we will use the dataset with a focus on news topic classification. Each article is
+classified in one of the following categories: World, Sports, Business, and Sci/Tech. Each of the
+categories is represented by a number from 0 to 3, respectively.
+
+The training split contains 120,000 instances, while the test split contains 7,600 instances.
+However, for this project a validation split is created consisting of the 0.05% of the train split
+instances. Therefore the final sizes of the splits are 114,000, 6,000, and 7,600 instances,
+respectively for the train, dev and test splits.
+
+The dataset shows a balanced distribution of the different categories, with each category having
+approximately 25% of the instances, both in the train and test splits.
+
+An example of an annotated instance from the training split:
+
+```
+text: US trade deficit swells in June The US trade deficit has exploded 19 to a record \$55.8bn as
+oil costs drove imports higher, according to a latest figures.
+label: 2
+```
+
+The task associated with this dataset involves training the T5 to automatically classify news
+articles into one of the predefined categories. Evaluation of model performance is done with
+macro-accuracy, macro-precision, macro-recall, and macro-F1 score.
+
+For access to the dataset and more detailed information, please refer to the provided link:
+https://huggingface.co/datasets/ag_news or to the dataset's original webpage
+http://www.di.unipi.it/~gulli/AG_corpus_of_news_articles.html
 """
 
 import logging
