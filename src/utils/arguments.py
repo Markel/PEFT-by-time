@@ -43,15 +43,21 @@ class Args(argparse.Namespace):
     # The project to log the experiment.
     project: str = "peft-by-time"
 
-    ##* LoRA parameters
+    ##* LoRA and VeRA parameters
     # The rank to set LoRA to.
     rank: Optional[int] = None
-    # The alpha to set LoRA to.
-    alpha: Optional[int] = None
     # The dropout to set LoRA to.
     dropout: Optional[float] = None
     # The modules to target. Default to ["query", "value"].
     target_modules: Optional[list[str]] = None
+
+    ##* LoRA parameters
+    # The alpha to set LoRA to.
+    alpha: Optional[int] = None
+
+    ##* VeRA parameters
+    # The initial value of the d parameter in VeRA.
+    d_initial: Optional[float] = None
 
 
 def parse_args() -> Args:
@@ -113,6 +119,18 @@ def parse_args() -> Args:
     parser_lora.add_argument('-d', '--dropout', type=float,
                              help='The dropout to set LoRA to.', default=0.1)
     parser_lora.add_argument('-t', '--target_modules', type=str, nargs='+',
+                             default=["q", "v"],
+                             help='The modules to target. Default to ["q", "v"].')
+
+    #* VeRA method
+    parser_vera = subparsers.add_parser('VeRA', help='Vector-based Random Matrix Adaptation')
+    parser_vera.add_argument('-r', '--rank', type=int,
+                             help='The rank to set LoRA to.', default=256)
+    parser_vera.add_argument('-d', '--dropout', type=float,
+                             help='The dropout to set LoRA to.', default=0.1)
+    parser_vera.add_argument('-di', '--d_initial', type=float,
+                             help='The initial value of the d parameter in VeRA.', default=0.1)
+    parser_vera.add_argument('-t', '--target_modules', type=str, nargs='+',
                              default=["q", "v"],
                              help='The modules to target. Default to ["q", "v"].')
 

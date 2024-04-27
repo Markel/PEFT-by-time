@@ -100,7 +100,7 @@ def get_wandb_experiment_name(args: Args) -> str:
         return args.experiment_name
 
     name = f"{args.method}_{args.model}_{args.dataset}"
-    if args.method == "LoRA":
+    if args.method == "LoRA" or args.method == "VeRA":
         name += f"_r{args.rank}"
     name += f"_{datetime.datetime.now().strftime('%m%d')}"
     return name

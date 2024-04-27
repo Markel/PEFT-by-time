@@ -12,6 +12,7 @@ from typing import cast
 from peft.mapping import get_peft_model
 from peft.peft_model import PeftModel
 from peft.tuners.lora.config import LoraConfig
+from peft.tuners.vera.config import VeraConfig
 from transformers import T5ForConditionalGeneration
 from ..utils.arguments import Args
 
@@ -41,6 +42,16 @@ def convert_to_peft(model: T5ForConditionalGeneration, args: Args) -> PeftModel:
 
         peft_model = convert_to_lora(model,
                                      args.rank, args.alpha, args.dropout, args.target_modules)
+    elif args.method == "VeRA":
+        logger.debug("Method selected: VeRA. Proceeding to convert the model.")
+        if (isinstance(args.rank, type(None)) or isinstance(args.d_initial, type(None)) or
+            isinstance(args.dropout, type(None)) or isinstance(args.target_modules, type(None))):
+            logger.critical("Method VeRA requires rank, d_initial, dropout and target modules. \
+                            Parser should have failed.")
+            raise ValueError("Method VeRA requires rank, d_initial, dropout and target modules.")
+
+        peft_model = convert_to_vera(model,
+                                     args.rank, args.d_initial, args.dropout, args.target_modules)
     elif args.method == "FT":
         logger.debug("Method selected: Full fine-tuning. Proceeding to \"convert\" the model.")
         peft_model = dummy_fft_convert(model)
@@ -113,3 +124,49 @@ def dummy_fft_convert(model: T5ForConditionalGeneration) -> PeftModel:
                 100,
                 "%")
     return cast(PeftModel, model)
+
+def convert_to_vera(model: T5ForConditionalGeneration,
+                    rank: int, d_initial: float,
+                    dropout: float,
+                    target_modules: list[str],
+                    ) -> PeftModel:
+    """
+    Converts a given T5 model to a VeRA model.
+
+    Args:
+        model (T5ForConditionalGeneration): The T5 model to convert.
+        rank (int): The rank of the VeRA model.
+        d_initial (float): The initial value of the d parameter in VeRA.
+        dropout (float): The dropout rate for VeRA.
+        target_modules (list[str]): The list of target modules for VeRA.
+
+    Returns:
+        PeftModel: The converted VeRA model.
+
+    Notes:
+        - As of April 2024 peft needs to be installed from the source code for VeRA support.
+        - The function should work with non T5 models, but it's not guaranteed, specially
+        taking into account the limitations of the current implementation.
+        - The bias is set to "vera_only".
+        - The modules to save are set to ["decode_head"].
+        
+    """
+    
+    config = VeraConfig(
+        r=rank,
+        d_initial=d_initial,
+        target_modules=target_modules,
+        vera_dropout=dropout,
+        bias="vera_only",
+        modules_to_save=["decode_head"],
+    )
+    logger.debug("VeRA configuration created successfully.")
+    peft_model = get_peft_model(model, config)
+    peft_model = cast(PeftModel, peft_model)
+    logger.info("New model's (VeRA) trainable parameters: %s. Total: %s (%s%s).",
+                peft_model.get_nb_trainable_parameters()[0],
+                peft_model.get_nb_trainable_parameters()[1],
+                round(100 * peft_model.get_nb_trainable_parameters()[0]
+                      / peft_model.get_nb_trainable_parameters()[1], 5),
+                "%")
+    return peft_model
