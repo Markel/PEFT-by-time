@@ -98,14 +98,14 @@ class CommonSenseQA(BaseDataset):
         ]).to(device_t)
         return metric_collection
 
-    def pre_eval_func(self, batch, labels) -> Tensor:
+    def pre_eval_func(self, batch, token_labels) -> Tensor:
         """
         This method will return the tensor to be used for evaluation given the outputs
         of the model.
 
         It will match the output with the label token to token.
         """
-        c_labels = copy(labels)
+        c_labels = copy(token_labels)
         c_batch = batch.logits.argmax(-1).tolist()
         c_labels[c_labels == -100] = 0
         c_labels = c_labels.tolist()

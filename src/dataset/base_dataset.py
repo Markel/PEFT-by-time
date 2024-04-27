@@ -55,7 +55,7 @@ class BaseDataset(ABC):
         """
 
     @abstractmethod
-    def pre_eval_func(self, batch, labels) -> Union[Tensor, list[str]]:
+    def pre_eval_func(self, batch, token_labels) -> Union[Tensor, list[str]]:
         """
         This method will return the tensor to be used for evaluation given the outputs
         of the model.
