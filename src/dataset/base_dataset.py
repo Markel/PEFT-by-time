@@ -40,7 +40,8 @@ class BaseDataset(ABC):
         local_dir = "./downloads/datasets/"+dataset_name
         if not os.path.isdir(local_dir):
             logger.info("Downloading the dataset from the internet.")
-            snapshot_download(dataset_name, local_dir=local_dir, repo_type="dataset")
+            snapshot_download(dataset_name, local_dir=local_dir,
+                              repo_type="dataset", local_dir_use_symlinks=False)
             logger.debug("Dataset downloaded successfully.")
 
     def __str__(self):
