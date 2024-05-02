@@ -100,7 +100,7 @@ class Race(BaseDataset):
             "BLEU2": BLEUScore(n_gram=2, smooth=True),
             "BLEU3": BLEUScore(n_gram=3, smooth=True),
             "BLEU4": BLEUScore(n_gram=4, smooth=True),
-            #"ROGUE": ROUGEScore(), # I would actually use only ROGUE_L, but let's compute all
+            "ROUGE": ROUGEScore(rouge_keys="rougeL"),
         }).to(device_t)
         return metric_collection
 
