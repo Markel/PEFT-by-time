@@ -73,7 +73,7 @@ class TweetEvalHate(BaseDataset):
         ]).to(device_t)
         return metric_collection
 
-    def pre_eval_func(self, batch) -> Tensor:
+    def pre_eval_func(self, batch, _=None) -> Tensor:
         """
         This method will return the tensor to be used for evaluation given the outputs
         of the model.

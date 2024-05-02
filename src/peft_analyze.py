@@ -32,6 +32,7 @@ def main() -> None:
     model, tokenizer = download_model(ARGS.model, DEVICE)
     model   = convert_to_peft(model, ARGS)
     dataset = download_dataset(ARGS.dataset, tokenizer, DEVICE)
+    model.resize_token_embeddings(len(tokenizer))
 
     os.environ["WANDB_SILENT"] = "true"
     if "WANDB_API_KEY" not in os.environ:
