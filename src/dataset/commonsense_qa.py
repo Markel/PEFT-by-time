@@ -121,7 +121,7 @@ class CommonSenseQA(BaseDataset):
         output_label = [1 if pred[:len(gold)] == gold else 0 \
                         for pred, gold in zip(c_batch, c_labels)]
         output_label = torch.tensor(output_label).to(batch.logits.get_device())
-        print(output_label)
+        #print(output_label)
         return output_label
 
 if __name__ == "__main__":
