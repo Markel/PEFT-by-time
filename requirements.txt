@@ -37,7 +37,7 @@ networkx==3.2.1
 numpy==1.26.4
 packaging==23.2
 pandas==2.2.0
-peft==0.8.2
+peft @ git+https://github.com/huggingface/peft@8bc3c0861d4a06d1501b5e8954079804419bb0e6
 pillow==10.2.0
 platformdirs==4.2.0
 protobuf==4.25.3
