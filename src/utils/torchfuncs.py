@@ -100,7 +100,7 @@ def get_wandb_experiment_name(args: Args) -> str:
         return args.experiment_name
 
     name = f"{args.method}_{args.model}_{args.dataset}"
-    if args.method == "LoRA" or args.method == "VeRA":
+    if args.method in ("LoRA", "VeRA"):
         name += f"_r{args.rank}"
     elif args.method == "prefix":
         name += f"_nvt{args.num_virtual_tokens}"
