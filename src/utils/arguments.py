@@ -3,7 +3,7 @@
 import argparse
 import os
 from dataclasses import dataclass
-from typing import Literal, Optional, cast
+from typing import Literal, Optional, Union, cast
 
 @dataclass
 class Args(argparse.Namespace):
@@ -29,7 +29,7 @@ class Args(argparse.Namespace):
     # The model to use.
     model: str
     # The method to use.
-    method: Literal["LoRA", "FT"]
+    method: Literal["LoRA", "VeRA", "prefix", "FT"]
     # If the output should be colored.
     no_color: bool
     # The optimizer to use. Defaults to "adafactor".
@@ -58,6 +58,14 @@ class Args(argparse.Namespace):
     ##* VeRA parameters
     # The initial value of the d parameter in VeRA.
     d_initial: Optional[float] = None
+
+    ##* Prefix tuning parameters
+    # The number of virtual tokens to use in the prefix tuning. Default to 20.
+    num_virtual_tokens: Optional[int] = None
+    # The number of hidden units in the encoder.
+    encoder_hidden: Optional[Union[int, None]] = None
+    # If the prefix projection should be used.
+    prefix_projection: Optional[bool] = None
 
 
 def parse_args() -> Args:
@@ -133,6 +141,17 @@ def parse_args() -> Args:
     parser_vera.add_argument('-t', '--target_modules', type=str, nargs='+',
                              default=["q", "v"],
                              help='The modules to target. Default to ["q", "v"].')
+
+    #* Prefix tuning
+    parser_prefix = subparsers.add_parser('prefix', help='Prefix Tuning')
+    parser_prefix.add_argument('-nt', '--num_virtual_tokens', type=int, default=20,
+                               help='The number of virtual tokens to use in the prefix tuning.\
+                                 Default to 20.')
+    parser_prefix.add_argument('-eh', '--encoder_hidden', type=int,
+                               help='The number of hidden units in the encoder.')
+    parser_prefix.add_argument('-pp', '--prefix_projection', action="store_false", default=True,
+                               help='If the prefix projection should be used. If selected\
+                                     embedding only is used.')
 
     #* Full fine-tuning
     # pylint: disable=unused-variable
