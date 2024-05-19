@@ -9,7 +9,8 @@ Available functions:
 import logging
 from typing import Union, cast
 
-from peft import PrefixTuningConfig, TaskType
+import adapters
+from peft import PrefixTuningConfig, TaskType # type: ignore
 from peft.mapping import get_peft_model
 from peft.peft_model import PeftModel
 from peft.tuners.lora.config import LoraConfig
@@ -17,6 +18,7 @@ from peft.tuners.vera.config import VeraConfig
 from transformers import T5ForConditionalGeneration
 
 from ..utils.arguments import Args
+from ..utils.torchfuncs import get_device
 
 logger = logging.getLogger("m.models.peft_convert")
 
@@ -66,6 +68,13 @@ def convert_to_peft(model: T5ForConditionalGeneration, args: Args) -> PeftModel:
         peft_model = convert_to_prefix_tuning(model,
                                              args.num_virtual_tokens, args.encoder_hidden,
                                              args.prefix_projection)
+    elif args.method == "adapters":
+        logger.debug("Method selected: Parallel Adapters. Proceeding to convert the model.")
+        if isinstance(args.reduction_factor, type(None)):
+            logger.critical("Method Parallel Adapters requires reduction_factor.\
+                            Parser should have failed.")
+            raise ValueError("Method Parallel Adapters requires reduction_factor.")
+        peft_model = add_parallel_adapters(model, args.reduction_factor)
     elif args.method == "FT":
         logger.debug("Method selected: Full fine-tuning. Proceeding to \"convert\" the model.")
         peft_model = dummy_fft_convert(model)
@@ -223,4 +232,33 @@ def convert_to_prefix_tuning(model: T5ForConditionalGeneration,
                 round(100 * peft_model.get_nb_trainable_parameters()[0]
                       / peft_model.get_nb_trainable_parameters()[1], 5),
                 "%")
+    return peft_model
+
+def add_parallel_adapters(model: T5ForConditionalGeneration,
+                          reduction_factor: float,
+                          )-> PeftModel:
+    """
+    Adds parallel adapters to the given model.
+
+    Args:
+        model (T5ForConditionalGeneration): The model to add the adapters to.
+        reduction_factor (float): The reduction factor to use in the adapters. It's float
+        because the adapters library uses floats, but integers are expected. Default is 2.
+
+    Returns:
+        PeftModel: A casted model with the parallel adapters, in reality T5AdapterModel.
+    """
+    logger.debug("Converting model to adapters type.")
+    num_orig = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    adapters.init(model)
+    peft_model = cast(adapters.T5AdapterModel, model) # type: ignore
+    config = adapters.ParBnConfig(reduction_factor=reduction_factor)
+    peft_model.add_adapter("parallel_adapter", config=config)
+    peft_model.train_adapter(["parallel_adapter"])
+    peft_model.set_active_adapters(["parallel_adapter"])
+    peft_model.to(get_device()) # type: ignore
+    num_new  = sum(p.numel() for p in peft_model.parameters() if p.requires_grad)
+    logger.info("New model's (Adapters) trainable parameters: %s. Total: %s (%s%s).",
+                num_new, num_orig, round(100 * num_new / num_orig, 5), "%")
+    peft_model = cast(PeftModel, peft_model)
     return peft_model
