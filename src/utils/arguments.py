@@ -29,7 +29,7 @@ class Args(argparse.Namespace):
     # The model to use.
     model: str
     # The method to use.
-    method: Literal["LoRA", "VeRA", "prefix", "FT"]
+    method: Literal["LoRA", "VeRA", "prefix", "FT", "adapters"]
     # If the output should be colored.
     no_color: bool
     # The optimizer to use. Defaults to "adafactor".
@@ -66,6 +66,10 @@ class Args(argparse.Namespace):
     encoder_hidden: Optional[Union[int, None]] = None
     # If the prefix projection should be used.
     prefix_projection: Optional[bool] = None
+
+    ##* Parallel Adapters parameters
+    # The reduction factor to use in the adapters. Defaults to 2.0.
+    reduction_factor: Optional[float] = None
 
 
 def parse_args() -> Args:
@@ -152,6 +156,12 @@ def parse_args() -> Args:
     parser_prefix.add_argument('-pp', '--prefix_projection', action="store_false", default=True,
                                help='If the prefix projection should be used. If selected\
                                      embedding only is used.')
+
+    #* Parallel Adapters
+    parser_adapters = subparsers.add_parser('adapters', help='Parallel Adapters')
+    parser_adapters.add_argument('-rf', '--reduction_factor', type=float, default=2.0,
+                                 help='The reduction factor to use in the adapters.\
+                                    Defaults to 2.0.')
 
     #* Full fine-tuning
     # pylint: disable=unused-variable

@@ -106,6 +106,7 @@ class MACCounterMode(TorchDispatchMode):
         self.parents = ['Global']
         self.debug = debug
         self.show = show
+        self.mixmatchWarning = False
         list_of_modules = [] if module is None else [("", module)]
         while len(list_of_modules) > 0:
             name, module = list_of_modules.pop()
@@ -165,7 +166,15 @@ class MACCounterMode(TorchDispatchMode):
 
             @staticmethod
             def backward(ctx, *grad_outs):
-                assert(self.parents[-1] == name)
+                try:
+                    assert self.parents[-1] == name, f"Error: {self.parents[-1]} != {name}"
+                except AssertionError:
+                    if ("non_linearity" in name or "non_linearity" in self.parents[-1]):
+                        if not self.mixmatchWarning:
+                            logger.warn("Parallel adapters mix up in `adapter_down` and `non_linearity`. If not using adapters proceed with care. Ignoring the error and continuing...") # pylint: disable=line-too-long
+                            self.mixmatchWarning = True
+                    else:
+                        raise AssertionError(f"Error: {self.parents[-1]} != {name}")
                 self.parents.pop()
                 return grad_outs
 
