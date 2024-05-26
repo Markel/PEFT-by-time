@@ -121,11 +121,11 @@ class Race(BaseDataset):
         output_label = torch.argmax(batch.logits, dim=2).tolist()
         token_positi = list(map(get_index, output_label))
         output_label = list(map(lambda x, y: x[:y], output_label, token_positi))
-        print(token_positi)
+        #print(token_positi)
         output_label = self.tokenizer.batch_decode(
             output_label, skip_special_tokens=True
         )
-        print(output_label)
+        #print(output_label)
         return output_label
 
 if __name__ == "__main__":
