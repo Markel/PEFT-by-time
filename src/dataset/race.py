@@ -111,10 +111,21 @@ class Race(BaseDataset):
 
         In this case the return vector will be the decoded input ids.
         """
+
+        def get_index(digits) -> int:
+            try:
+                return digits.index(self.tokenizer.eos_token_id)
+            except ValueError:
+                return len(digits)
+
+        output_label = torch.argmax(batch.logits, dim=2).tolist()
+        token_positi = list(map(get_index, output_label))
+        output_label = list(map(lambda x, y: x[:y], output_label, token_positi))
+        print(token_positi)
         output_label = self.tokenizer.batch_decode(
-            torch.argmax(batch.logits, dim=2).tolist(), skip_special_tokens=True
+            output_label, skip_special_tokens=True
         )
-        #output_label = torch.tensor(output_label).to(batch.logits.get_device())
+        print(output_label)
         return output_label
 
 if __name__ == "__main__":
