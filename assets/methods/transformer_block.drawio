@@ -1,6 +1,6 @@
-<mxfile host="65bd71144e">
+<mxfile host="65bd71144e" scale="1" border="0" disableSvgWarning="true">
     <diagram id="9bh0cdp2ASUkYgQ-xmnt" name="Page-1">
-        <mxGraphModel dx="808" dy="439" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+        <mxGraphModel dx="700" dy="519" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
             <root>
                 <mxCell id="0"/>
                 <mxCell id="1" parent="0"/>
@@ -70,7 +70,7 @@
                 <mxCell id="29" style="edgeStyle=none;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.075;entryY=1;entryDx=0;entryDy=0;entryPerimeter=0;strokeWidth=2;fontColor=#FFFFFF;endArrow=classicThin;endFill=1;endSize=1;" edge="1" parent="1" source="14" target="26">
                     <mxGeometry relative="1" as="geometry"/>
                 </mxCell>
-                <mxCell id="14" value="&lt;font color=&quot;#ffffff&quot;&gt;Q&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0173b2;fontFamily=EHUSans;fontStyle=0;" vertex="1" parent="1">
+                <mxCell id="14" value="&lt;font&gt;Q&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0173b2;fontFamily=EHUSans;fontStyle=0;fontColor=#FFFFFF;" vertex="1" parent="1">
                     <mxGeometry x="75" y="336" width="40" height="40" as="geometry"/>
                 </mxCell>
                 <mxCell id="30" style="edgeStyle=none;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.534;entryY=0.617;entryDx=0;entryDy=0;entryPerimeter=0;strokeWidth=2;fontColor=#FFFFFF;endArrow=classicThin;endFill=1;endSize=1;" edge="1" parent="1" source="15">
@@ -78,7 +78,7 @@
                         <mxPoint x="207.58000000000015" y="280.07399999999996" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="15" value="&lt;font color=&quot;#ffffff&quot;&gt;K&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0173b2;fontFamily=EHUSans;fontStyle=0;" vertex="1" parent="1">
+                <mxCell id="15" value="&lt;font&gt;K&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0173b2;fontFamily=EHUSans;fontStyle=0;fontColor=#FFFFFF;" vertex="1" parent="1">
                     <mxGeometry x="187.5" y="336" width="40" height="40" as="geometry"/>
                 </mxCell>
                 <mxCell id="31" style="edgeStyle=none;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.838;entryY=0.617;entryDx=0;entryDy=0;entryPerimeter=0;strokeWidth=2;fontColor=#FFFFFF;endArrow=classicThin;endFill=1;endSize=1;" edge="1" parent="1" source="16">
@@ -86,7 +86,7 @@
                         <mxPoint x="320.0600000000002" y="280.07399999999996" as="targetPoint"/>
                     </mxGeometry>
                 </mxCell>
-                <mxCell id="16" value="&lt;font color=&quot;#ffffff&quot;&gt;V&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0173b2;fontFamily=EHUSans;fontStyle=0;" vertex="1" parent="1">
+                <mxCell id="16" value="&lt;font&gt;V&lt;/font&gt;" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#0173b2;fontFamily=EHUSans;fontStyle=0;fontColor=#FFFFFF;" vertex="1" parent="1">
                     <mxGeometry x="300" y="336" width="40" height="40" as="geometry"/>
                 </mxCell>
                 <mxCell id="27" style="edgeStyle=orthogonalEdgeStyle;html=1;exitX=0.5;exitY=0;exitDx=0;exitDy=0;entryX=0.5;entryY=1;entryDx=0;entryDy=0;strokeWidth=2;fontColor=#FFFFFF;endArrow=classicThin;endFill=1;endSize=1;" edge="1" parent="1" source="26" target="3">
