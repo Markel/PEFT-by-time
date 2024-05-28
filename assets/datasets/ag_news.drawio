@@ -1,0 +1,28 @@
+<mxfile host="65bd71144e" scale="1" border="0" disableSvgWarning="true">
+    <diagram id="QVV_8_wYwJ7n891jjr2S" name="Page-1">
+        <mxGraphModel dx="1194" dy="272" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="6" value="" style="group" parent="1" vertex="1" connectable="0">
+                    <mxGeometry x="-810" y="10" width="590" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="2" value="&lt;font face=&quot;EHUSans&quot;&gt;&lt;b&gt;Context:&lt;br&gt;&lt;/b&gt;Oracle Sales Data Seen Being Released (Reuters) Reuters - Oracle Corp. sales documents detailing highly confidential information, such as which companies receive discounts on Oracle's business software products and the size of the discounts, are likely to be made public, a federal judge said on Friday.&lt;br&gt;&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;" parent="6" vertex="1">
+                    <mxGeometry width="500" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="&lt;b&gt;Label:&lt;/b&gt;&lt;br&gt;3" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontFamily=EHUSans;fontStyle=0" parent="6" vertex="1">
+                    <mxGeometry x="540" width="50" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="7" value="" style="group" parent="1" vertex="1" connectable="0">
+                    <mxGeometry x="-810" y="120" width="430" height="130" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="&lt;b&gt;Model output:&lt;/b&gt;&lt;br&gt;The topic of the article is: Sci/Tech" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontFamily=EHUSans;fontStyle=0" parent="7" vertex="1">
+                    <mxGeometry width="323" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="&lt;b&gt;Prediction:&lt;/b&gt;&lt;br&gt;if model_output == &lt;b&gt;&quot;&lt;/b&gt;The topic of the article is: {Category}&quot;:&lt;br&gt;&lt;span style=&quot;&quot;&gt;&#9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#9;&lt;/span&gt;{Category_id}&lt;br&gt;else:&lt;br&gt;&lt;span style=&quot;&quot;&gt;&#9;&lt;/span&gt;&lt;span style=&quot;white-space: pre;&quot;&gt;&#9;&lt;/span&gt;0" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontFamily=EHUSans;fontStyle=0" parent="7" vertex="1">
+                    <mxGeometry y="50" width="430" height="80" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
