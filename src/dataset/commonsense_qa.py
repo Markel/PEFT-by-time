@@ -54,7 +54,8 @@ class CommonSenseQA(BaseDataset):
                 zip_list[0][0] + " - " + zip_list[0][1] + "\n" + \
                 zip_list[1][0] + " - " + zip_list[1][1] + "\n" + \
                 zip_list[2][0] + " - " + zip_list[2][1] + "\n" + \
-                zip_list[3][0] + " - " + zip_list[3][1]
+                zip_list[3][0] + " - " + zip_list[3][1] + "\n" + \
+                zip_list[4][0] + " - " + zip_list[4][1]
 
         dataset_dict = dataset_dict.map(
             lambda x: {"token_labels": tokenizer(
@@ -70,7 +71,7 @@ class CommonSenseQA(BaseDataset):
 
         dataset_dict = dataset_dict.map(
             lambda x: tokenizer(get_correct_context_text(x),
-                                max_length=105,
+                                max_length=109,
                                 padding="max_length",
                                 truncation=True,
                                 ), batched=False
