@@ -185,7 +185,7 @@ def full_training(model: PeftModel,
 
     steps_done : int = 0
     time_done  : float = 0.0 # In seconds
-    gmacs_done: float = 0.0
+    gmacs_done: float = -1e6
 
     running_loss: float = 0.0
 
@@ -227,15 +227,15 @@ def full_training(model: PeftModel,
         #* TRAINING
         logger.debug("Starting to train, iteration %d", iteration)
 
-        with m_counter:
-            start_time = time.time()
-            model, running_loss, train_tests = train_entire_batch(model, tokenizer,
-                                                                  train_loaders[loader_index],
-                                                                  optimizer, train_tests,
-                                                                  dataset.pre_eval_func,
-                                                                  running_loss)
-            end_time = time.time()
-        gmacs_done += m_counter.get_total()
+        #with m_counter:
+        start_time = time.time()
+        model, running_loss, train_tests = train_entire_batch(model, tokenizer,
+                                                                train_loaders[loader_index],
+                                                                optimizer, train_tests,
+                                                                dataset.pre_eval_func,
+                                                                running_loss)
+        end_time = time.time()
+        #gmacs_done += m_counter.get_total()
         if iteration == 0:
             run.summary["macs_per_step"] = (m_counter.get_total(divided=False)
                                             / len(train_loaders[0].dataset)) # type: ignore
