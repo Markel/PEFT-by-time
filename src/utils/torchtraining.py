@@ -215,7 +215,7 @@ def full_training(model: PeftModel,
     m_counter = MACCounterMode(model, show = True)
 
     #* WORKING LOOP
-    for iteration in range(iters_need):
+    for iteration in range(2):
         loader_index = iteration % number_of_shards
         logger.debug("Iteration %d, loader index %d", iteration, loader_index)
 
