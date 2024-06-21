@@ -1,0 +1,28 @@
+<mxfile host="65bd71144e" scale="1" border="0" disableSvgWarning="true">
+    <diagram id="QVV_8_wYwJ7n891jjr2S" name="Page-1">
+        <mxGraphModel dx="1358" dy="394" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+            <root>
+                <mxCell id="0"/>
+                <mxCell id="1" parent="0"/>
+                <mxCell id="8" value="" style="shape=curlyBracket;whiteSpace=wrap;html=1;rounded=1;flipH=1;labelPosition=right;verticalLabelPosition=middle;align=left;verticalAlign=middle;rotation=90;direction=east;" vertex="1" parent="1">
+                    <mxGeometry x="-607.5" y="-112.5" width="20" height="425" as="geometry"/>
+                </mxCell>
+                <mxCell id="9" value="&lt;div style=&quot;&quot;&gt;&lt;span style=&quot;font-family: EHUSans; background-color: initial;&quot;&gt;Context limited to 512 tokens, it may cut the article.&lt;/span&gt;&lt;/div&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=center;verticalAlign=middle;whiteSpace=wrap;rounded=0;" vertex="1" parent="1">
+                    <mxGeometry x="-795" y="110" width="395" height="20" as="geometry"/>
+                </mxCell>
+                <mxCell id="3" value="&lt;b&gt;Model output:&lt;/b&gt;&lt;br&gt;He found it in his food. &amp;lt;sep&amp;gt;&amp;nbsp;He dug it out in a valley. &amp;lt;sep&amp;gt;&amp;nbsp;He noticed it shining in the stream." style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontFamily=EHUSans;fontStyle=0" parent="1" vertex="1">
+                    <mxGeometry x="-810" y="160" width="480" height="50" as="geometry"/>
+                </mxCell>
+                <mxCell id="4" value="&lt;b&gt;Prediction:&lt;/b&gt;&lt;br&gt;model_output" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontFamily=EHUSans;fontStyle=0" parent="1" vertex="1">
+                    <mxGeometry x="-810" y="220" width="430" height="40" as="geometry"/>
+                </mxCell>
+                <mxCell id="2" value="&lt;font face=&quot;EHUSans&quot;&gt;&lt;b&gt;Context:&lt;br&gt;&lt;/b&gt;He saw it in the woman's bag. &amp;lt;sep&amp;gt; How did the young man find the precious stone? &amp;lt;sep&amp;gt; One day an old woman was traveling alone in the mountains. Suddenly she saw something shining in the stream. When she came close, she found it was a precious stone. She put the stone into her ...&lt;br&gt;&lt;/font&gt;" style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;" parent="1" vertex="1">
+                    <mxGeometry x="-810" y="10" width="420" height="80" as="geometry"/>
+                </mxCell>
+                <mxCell id="5" value="&lt;b&gt;Label:&lt;/b&gt;&lt;br&gt;He found it in his food. &amp;lt;sep&amp;gt;&amp;nbsp;He dug it out in a valley. &amp;lt;sep&amp;gt;&amp;nbsp;He noticed it shining in the stream." style="text;html=1;strokeColor=none;fillColor=none;align=left;verticalAlign=top;whiteSpace=wrap;rounded=0;fontFamily=EHUSans;fontStyle=0" parent="1" vertex="1">
+                    <mxGeometry x="-360" y="10" width="160" height="80" as="geometry"/>
+                </mxCell>
+            </root>
+        </mxGraphModel>
+    </diagram>
+</mxfile>
