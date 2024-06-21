@@ -7,7 +7,7 @@
 </p>
 
 <p style="text-align:center" align="center">
-This projecy helps to compare the effectiveness of Parameter-Efficient Fine-Tuning (PEFT) techniques in various NLP tasks. PEFT methods can democratize access to high-performance LLM models by making their fine-tuning more resource-efficient and accessible for diverse applications. The project implements three PEFT methods: Prefix-Tuning, Parallel Adapters, and Low-Rank Adaptation (LoRA). It can experiment on tasks including emotion classification, topic classification, multiple-choice question answering, and distractor generation, the research aims to identify the most effective PEFT technique given any number of operations.
+This project helps to compare the effectiveness of Parameter-Efficient Fine-Tuning (PEFT) techniques in various NLP tasks. PEFT methods can democratize access to high-performance LLM models by making their fine-tuning more resource-efficient and accessible for diverse applications. The project implements three PEFT methods: Prefix-Tuning, Parallel Adapters, and Low-Rank Adaptation (LoRA). It can experiment on tasks including emotion classification, topic classification, multiple-choice question answering, and distractor generation, the research aims to identify the most effective PEFT technique given any number of operations.
 </p>
 
 ## Requirements
